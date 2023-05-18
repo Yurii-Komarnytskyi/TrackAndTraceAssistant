@@ -6,7 +6,7 @@ import java.util.Objects;
 import com.ykomarnytskyi2022.exel_parser.FieldsTransmitter;
 
 
-class Shipment implements Comparable<Shipment> {
+public class Shipment implements Comparable<Shipment> {
 	private BasicShipmentFields organizationName;
 	private BasicShipmentFields shipmentNumber;
 	private BasicShipmentFields shipmentID;
