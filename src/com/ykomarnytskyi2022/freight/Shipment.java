@@ -6,7 +6,7 @@ import java.util.Objects;
 import com.ykomarnytskyi2022.exel_parser.FieldsTransmitter;
 
 
-class Shipment {
+class Shipment implements Comparable<Shipment> {
 	private BasicShipmentFields organizationName;
 	private BasicShipmentFields shipmentNumber;
 	private BasicShipmentFields shipmentID;
@@ -48,6 +48,17 @@ class Shipment {
 	public boolean equals(Object obj) {
 		return obj instanceof Shipment && 
 			Objects.equals(shipmentID, ((Shipment) obj).shipmentID) &&
-			Objects.equals(organizationName, ((Shipment) obj).organizationName);
+			Objects.equals(organizationName, ((Shipment) obj).organizationName) && 
+			Objects.equals(originCity, ((Shipment) obj).originCity) && 
+			Objects.equals(originState, ((Shipment) obj).originState) && 
+			Objects.equals(destinationCity, ((Shipment) obj).destinationCity) && 
+			Objects.equals(destinationState, ((Shipment) obj).destinationState);
 	}
+
+	@Override
+	public int compareTo(Shipment o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
