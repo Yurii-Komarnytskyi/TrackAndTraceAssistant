@@ -40,9 +40,8 @@ class Shipment implements Comparable<Shipment> {
 	}
 	
 	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
+	public int hashCode() {	
+		return Objects.hash(originCity, destinationCity, originState, destinationState, PNET, DNLT);
 	}
 	@Override
 	public boolean equals(Object obj) {
