@@ -12,7 +12,7 @@ public class FieldsTransmitter {
 
 	private Map<BasicShipmentFields, String> absorbedFeilds = new HashMap<>();
 
-	public void absorb(String stringCellValue, String key) {
+	public void absorb(String key, String stringCellValue) {
 		absorbedFeilds.put(BasicShipmentFields.fromString(key), stringCellValue);
 	}
 
@@ -25,4 +25,4 @@ public class FieldsTransmitter {
 		return absorbedFeilds.getOrDefault("Load ID", "this is a default val, sth. went wrong!");
 	}
 
-}
+}	
