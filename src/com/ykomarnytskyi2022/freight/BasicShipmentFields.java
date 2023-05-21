@@ -27,7 +27,8 @@ public enum BasicShipmentFields {
 		return feild;
 	}
 	
-	public static BasicShipmentFields fromString(String str) {
+	public static BasicShipmentFields fromString(String str) throws NullPointerException {
+		if(str == null || str.trim().equals("")) throw new NullPointerException("Key argument is equal to: \"" + str + "\"");
         for (BasicShipmentFields bsf : BasicShipmentFields.values()) {
             if (bsf.feild.equals(str.trim().toLowerCase())) {
                 return bsf;
