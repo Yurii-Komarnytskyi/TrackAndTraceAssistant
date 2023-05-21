@@ -20,12 +20,13 @@ public enum ShipmentStatus {
 		return status;
 	}
 	
-	public static ShipmentStatus fromString(String str) {
+	public static ShipmentStatus fromString(String str) throws NullPointerException {
+		if(str == null || str.trim().equals("")) throw new NullPointerException("str argument is equal to: \"" + str + "\"");
         for (ShipmentStatus ss : ShipmentStatus.values()) {
             if (ss.status.equals(str.trim().toLowerCase())) {
                 return ss;
             }
         }
-        return null;
+        return ShipmentStatus.PENDING_PU;
     }
 }
