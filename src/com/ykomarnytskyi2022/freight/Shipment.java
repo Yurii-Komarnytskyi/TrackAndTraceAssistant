@@ -2,7 +2,8 @@ package com.ykomarnytskyi2022.freight;
 
 import java.util.Map;
 import java.util.Objects;
-import com.ykomarnytskyi2022.exel_parser.FieldsTransmitter;
+
+import com.ykomarnytskyi2022.exel_manipulation.FieldsTransmitter;
 
 public class Shipment extends Trackable implements Comparable<Shipment> {
 	
@@ -94,6 +95,11 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 	@Override
 	public String getDestinationPlaceAndState() {
 		return destinationCity + ", " + destinationState;
+	}
+	
+	public String[] presentFdsToWriter() {
+		String[] r = {shipmentID, originCity, destinationCity , this.getSatusUpd(this)};
+		return r;
 	}
 	
 

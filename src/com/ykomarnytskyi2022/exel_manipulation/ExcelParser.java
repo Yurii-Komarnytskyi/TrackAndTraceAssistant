@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -15,13 +16,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import com.ykomarnytskyi2022.freight.Shipment;
+
 // TO DO 
 // add error handeling, this is a MUST
 // add dynamic pathes to the file itself and the sheet
 
-public class ExcelParser {
-	private static final String HARD_PATH = "C:\\Users\\Home\\Documents\\Search Results05152023_54926.xls";
-	private static final String THE_SHEET = "Search Results";
+public class ExcelParser extends PathSharer_BNN {
 	
 	private FileInputStream fis;
 	private Workbook wb;
@@ -64,21 +65,27 @@ public class ExcelParser {
 		}
 		return  ft;
 	}
-	public Set<FieldsTransmitter> parseAllLoads__Bnn() {
+	public Set<FieldsTransmitter> parseAllLoads__Bnn(String path) {
 		Set<FieldsTransmitter> parsedFreightData = new LinkedHashSet<>();
 		IntStream.range(1, this.countFilledRows())
 			.forEach((n) -> {
-				parsedFreightData.add(readRowHorizontally(HARD_PATH, n, this.countFilledColumns()));
+				parsedFreightData.add(readRowHorizontally(path, n, this.countFilledColumns()));
 			});
 
 		return parsedFreightData;
 	}
 
-	public static void main(String[] args) {
-		ExcelParser parsedExelFile = new ExcelParser(HARD_PATH, THE_SHEET);
-//		Set<FieldsTransmitter> t = parsedExelFile.parseAllLoads__Bnn();
-		List<FieldsTransmitter> t2 = new ArrayList<>(parsedExelFile.parseAllLoads__Bnn()); 
-		System.out.println(t2.get(2));
-	}
+//	public static void main(String[] args) {
+//		ExcelWriter ew = new ExcelWriter();
+//		ExcelParser parsedExelFile = new ExcelParser(ew.STEEL_PATH, ew.SEARCH_RESULTS);
+//		List<FieldsTransmitter> t2 = new ArrayList<>(parsedExelFile.parseAllLoads__Bnn(parsedExelFile.MHS_PATH)); 
+//		
+//		List<Shipment> shList = t2.stream()
+//				.map(ft -> new Shipment(ft))
+////				.peek(sh -> System.out.println(sh.getSatusUpd(sh)))
+//				.collect(Collectors.toCollection(ArrayList::new));
+//		
+//		ew.writeToExcel(ew.WRITE_TO, ew.SHEET_NAME, shList);
+//	}
 
 }

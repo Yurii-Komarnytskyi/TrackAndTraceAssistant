@@ -6,5 +6,55 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-anim-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-awt-util-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-bridge-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-codec-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-constants-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-css-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-dom-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-ext-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-gvt-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-i18n-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-parser-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-script-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-shared-resources-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-svg-dom-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-svggen-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-svgrasterizer-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-transcoder-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-util-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/batik-xml-1.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/bcpkix-jdk15on-1.70.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/bcprov-jdk15on-1.70.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/bcutil-jdk15on-1.70.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/commons-codec-1.15.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/commons-collections4-4.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/commons-compress-1.21.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/commons-math3-3.6.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/curvesapi-1.07.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/fontbox-2.0.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/graphics2d-0.40.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/jakarta.activation-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/jakarta.xml.bind-api-3.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/log4j-api-2.18.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/pdfbox-2.0.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-examples-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-excelant-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-javadoc-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-ooxml-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-ooxml-full-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-ooxml-lite-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/poi-scratchpad-5.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/slf4j-api-1.7.36.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/SparseBitSet-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/xml-apis-ext-1.3.04.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/xmlbeans-5.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/xmlgraphics-commons-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Home/Downloads/poiZips/xmlsec-3.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
