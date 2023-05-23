@@ -1,4 +1,4 @@
-package com.ykomarnytskyi2022.exel_parser;
+package com.ykomarnytskyi2022.exel_manipulation;
 
 import java.util.HashMap;
 import java.util.Map;
