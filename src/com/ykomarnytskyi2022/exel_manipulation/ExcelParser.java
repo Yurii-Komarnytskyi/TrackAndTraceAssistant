@@ -20,7 +20,7 @@ import com.ykomarnytskyi2022.freight.Shipment;
 
 // TO DO 
 // add error handeling, this is a MUST
-// add dynamic pathes to the file itself and the sheet
+// add dynamic paths to the file itself and the sheet
 
 public class ExcelParser extends PathSharer_BNN {
 	
@@ -36,9 +36,10 @@ public class ExcelParser extends PathSharer_BNN {
 	private int countFilledRows() {
 		return sheet.getLastRowNum();
 	}
-	public ExcelParser(String pathToAnExelFile, String sheetName) {
+	
+	public ExcelParser(String filePath, String sheetName) {
 		try {
-			fis = new FileInputStream(pathToAnExelFile);
+			fis = new FileInputStream(filePath);
 			wb = WorkbookFactory.create(fis);
 			sheet = wb.getSheet(sheetName);
 			headerRow = sheet.getRow(0);
@@ -51,7 +52,7 @@ public class ExcelParser extends PathSharer_BNN {
 			e.printStackTrace();
 		}
 	}
-	public FieldsTransmitter readRowHorizontally(String sheetName, int rowNum, int columnsTotal) {
+	public FieldsTransmitter readRowHorizontally(int rowNum, int columnsTotal) {
 		FieldsTransmitter ft = new FieldsTransmitter();
 		try {
 			Row r = sheet.getRow(rowNum);
@@ -65,27 +66,14 @@ public class ExcelParser extends PathSharer_BNN {
 		}
 		return  ft;
 	}
-	public Set<FieldsTransmitter> parseAllLoads__Bnn(String path) {
+	public Set<FieldsTransmitter> parseFreightDataInTheFile() {
 		Set<FieldsTransmitter> parsedFreightData = new LinkedHashSet<>();
 		IntStream.range(1, this.countFilledRows())
 			.forEach((n) -> {
-				parsedFreightData.add(readRowHorizontally(path, n, this.countFilledColumns()));
+				parsedFreightData.add(readRowHorizontally(n, this.countFilledColumns()));
 			});
 
 		return parsedFreightData;
 	}
-
-//	public static void main(String[] args) {
-//		ExcelWriter ew = new ExcelWriter();
-//		ExcelParser parsedExelFile = new ExcelParser(ew.STEEL_PATH, ew.SEARCH_RESULTS);
-//		List<FieldsTransmitter> t2 = new ArrayList<>(parsedExelFile.parseAllLoads__Bnn(parsedExelFile.MHS_PATH)); 
-//		
-//		List<Shipment> shList = t2.stream()
-//				.map(ft -> new Shipment(ft))
-////				.peek(sh -> System.out.println(sh.getSatusUpd(sh)))
-//				.collect(Collectors.toCollection(ArrayList::new));
-//		
-//		ew.writeToExcel(ew.WRITE_TO, ew.SHEET_NAME, shList);
-//	}
-
+ 
 }
