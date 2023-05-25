@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -15,8 +14,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import com.ykomarnytskyi2022.freight.Shipment;
 
 // TO DO 
 // add error handeling, this is a MUST
@@ -52,7 +49,7 @@ public class ExcelParser extends PathSharer_BNN {
 			e.printStackTrace();
 		}
 	}
-	public FieldsTransmitter readRowHorizontally(int rowNum, int columnsTotal) {
+	FieldsTransmitter readRowHorizontally(int rowNum, int columnsTotal) {
 		FieldsTransmitter ft = new FieldsTransmitter();
 		try {
 			Row r = sheet.getRow(rowNum);
@@ -66,7 +63,7 @@ public class ExcelParser extends PathSharer_BNN {
 		}
 		return  ft;
 	}
-	public Set<FieldsTransmitter> parseFreightDataInTheFile() {
+	Set<FieldsTransmitter> parseFreightDataInSingleFile() {
 		Set<FieldsTransmitter> parsedFreightData = new LinkedHashSet<>();
 		IntStream.range(1, this.countFilledRows())
 			.forEach((n) -> {
@@ -75,5 +72,13 @@ public class ExcelParser extends PathSharer_BNN {
 
 		return parsedFreightData;
 	}
- 
+
+	static List<Set<FieldsTransmitter>> readFromMultipleFiles (List<ExcelParser> pList) {
+		List<Set<FieldsTransmitter>> tList = new ArrayList<>();
+		pList.stream()
+			.forEach(parsing -> {
+				tList.add(parsing.parseFreightDataInSingleFile());
+			});
+		return tList;
+	}
 }
