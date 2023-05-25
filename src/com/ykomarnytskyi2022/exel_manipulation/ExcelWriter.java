@@ -64,7 +64,6 @@ class ExcelWriter extends PathSharer_BNN {
 		}
 	}
 
-//	indicateNewMethod in next commit
 	<T extends Shipment> void writeToExcelFromMultFiles(List<Set<FieldsTransmitter>> listOfParsedFiles,
 			ExcelWriter writer) {
 
@@ -75,7 +74,6 @@ class ExcelWriter extends PathSharer_BNN {
 			});
 	}
 
-	// indicateNewMethod in next commit
 	List<Shipment> mapFromFieldsTransToShipment(Set<FieldsTransmitter> ftSet) {
 		return ftSet.stream()
 				.map(ft -> new Shipment(ft))
