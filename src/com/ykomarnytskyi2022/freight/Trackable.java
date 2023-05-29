@@ -1,7 +1,6 @@
 package com.ykomarnytskyi2022.freight;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,10 +11,13 @@ public abstract class Trackable {
 	static String ifp =  "Could you advise if this load has been picked up in ";
 	static String er = "Could you advise on an ETA to the receiver in ";
 	static String ifd = "Could you advise if this load has been delivered in ";
+	// time pattern
+	// 06/01/23 07:00 ET 
 	
 	public String formalGreeting() {
-		SimpleDateFormat formatTime = new SimpleDateFormat("aa");
-		return "Good " + (formatTime.format(new Date()).equals("AM")? "morning, \n" : "afternoon, \n");
+		int currentHour = LocalDateTime.now().getHour();
+		if(currentHour >= 18 && currentHour <= 21) return "Good evening, \n";
+		return "Good " + ((currentHour >= 6 && currentHour <= 12)? "morning, \n" : "afternoon, \n");
 	}
 	
 	public String getSatusUpd( Shipment s) {
