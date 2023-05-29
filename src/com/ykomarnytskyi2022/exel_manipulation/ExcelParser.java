@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 import org.apache.poi.EncryptedDocumentException;
@@ -86,6 +87,10 @@ public class ExcelParser extends PathSharer_BNN {
 	@Override
 	public boolean equals(Object obj) {
 		return this.filePath.equals(obj.toString());
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(filePath);
 	}
 	@Override
 	public String toString() {
