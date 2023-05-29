@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -64,32 +65,19 @@ class ExcelWriter extends PathSharer_BNN {
 		}
 	}
 
-	<T extends Shipment> void writeToExcelFromMultFiles(List<Set<FieldsTransmitter>> listOfParsedFiles,
-			ExcelWriter writer) {
+	<T extends Shipment> void writeToExcelFromMultFiles(List<Set<FieldsTransmitter>> listOfParsedFiles) {
 
 		listOfParsedFiles.stream()
-			.map(fieldsTransm -> writer.mapFromFieldsTransToShipment(fieldsTransm))	
+			.map(fieldsTransm -> mapFromFieldsTransToShipment(fieldsTransm))	
 			.forEach(shipm -> {
-				writer.writeToExcel(shipm);
+				this.writeToExcel(shipm);
 			});
 	}
 
-	List<Shipment> mapFromFieldsTransToShipment(Set<FieldsTransmitter> ftSet) {
+	static List<Shipment> mapFromFieldsTransToShipment(Set<FieldsTransmitter> ftSet) {
 		return ftSet.stream()
 				.map(ft -> new Shipment(ft))
 				.collect(Collectors.toCollection(ArrayList::new));
-	}
-
-	public static void main(String[] args) {
-		ExcelWriter write = new ExcelWriter(ExcelWriter.WRITE_TO, ExcelWriter.SHEET_NAME);
-		List<ExcelParser> testList = new ArrayList<>();
-		testList.add(new ExcelParser(write.MHS_PATH, write.SEARCH_RESULTS));
-		testList.add(new ExcelParser(write.CENTRIA_PATH, write.SEARCH_RESULTS));
-		testList.add(new ExcelParser(write.STEEL_PATH, write.SEARCH_RESULTS));
-
-		write.writeToExcelFromMultFiles(ExcelParser.readFromMultipleFiles(testList), write);
-
-
 	}
 
 }
