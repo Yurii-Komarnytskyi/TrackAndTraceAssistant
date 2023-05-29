@@ -64,10 +64,10 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 			destinationCity = this.prettifyLocationName(mapOFields.get(BasicShipmentFields.DESTINATION));
 			originState = mapOFields.get(BasicShipmentFields.ORIGIN_STATE);
 			destinationState = mapOFields.get(BasicShipmentFields.DESTINATION_STATE);
-			PNET = Trackable.bigT(mapOFields.get(BasicShipmentFields.PNET));
-			PNLT = Trackable.bigT(mapOFields.get(BasicShipmentFields.PNLT));
-			DNET = Trackable.bigT(mapOFields.get(BasicShipmentFields.DNET));
-			DNLT = Trackable.bigT(mapOFields.get(BasicShipmentFields.DNLT));	
+			PNET = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.PNET));
+			PNLT = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.PNLT));
+			DNET = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.DNET));
+			DNLT = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.DNLT));	
 			
 		} catch (NullPointerException e) {
 			System.err.println(e.getMessage());
