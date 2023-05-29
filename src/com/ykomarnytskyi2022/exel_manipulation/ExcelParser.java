@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 // TO DO 
-// add error handeling, this is a MUST
+// add error handling, this is a MUST
 // add dynamic paths to the file itself and the sheet
 
 public class ExcelParser extends PathSharer_BNN {
@@ -25,6 +25,7 @@ public class ExcelParser extends PathSharer_BNN {
 	private Workbook wb;
 	private Sheet sheet;
 	private Row headerRow;
+	private String filePath;
 	
 	
 	private int countFilledColumns() {
@@ -35,6 +36,7 @@ public class ExcelParser extends PathSharer_BNN {
 	}
 	
 	public ExcelParser(String filePath, String sheetName) {
+		this.filePath = filePath;
 		try {
 			fis = new FileInputStream(filePath);
 			wb = WorkbookFactory.create(fis);
@@ -80,5 +82,13 @@ public class ExcelParser extends PathSharer_BNN {
 				tList.add(parsing.parseFreightDataInSingleFile());
 			});
 		return tList;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		return this.filePath.equals(obj.toString());
+	}
+	@Override
+	public String toString() {
+		return this.filePath;
 	}
 }
