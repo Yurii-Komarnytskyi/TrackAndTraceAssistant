@@ -1,5 +1,7 @@
 package com.ykomarnytskyi2022.freight;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,12 +20,12 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 	private String destinationCity;
 	private String originState; 
 	private String destinationState;  
-	private String PNET; 
+	private LocalDateTime PNET; 
 	@SuppressWarnings("unused")
-	private String PNLT; 
+	private LocalDateTime PNLT; 
 	@SuppressWarnings("unused")
-	private String DNET; 
-	private String DNLT; 
+	private LocalDateTime DNET; 
+	private LocalDateTime DNLT; 
 	
 	public String getOriginCity() {
 		return originCity;
@@ -41,6 +43,15 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 		return destinationState;
 	}
 
+	@Override
+	public String getOriginPlaceAndState() {
+		return originCity + ", " + originState;
+	}
+
+	@Override
+	public String getDestinationPlaceAndState() {
+		return destinationCity + ", " + destinationState;
+	}
 	public Shipment(FieldsTransmitter ft) {
 		Map<BasicShipmentFields, String > mapOFields = ft.getMapOfAbsorbedFields();
 		try {
@@ -53,11 +64,14 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 			destinationCity = this.prettifyLocationName(mapOFields.get(BasicShipmentFields.DESTINATION));
 			originState = mapOFields.get(BasicShipmentFields.ORIGIN_STATE);
 			destinationState = mapOFields.get(BasicShipmentFields.DESTINATION_STATE);
-			PNET = mapOFields.get(BasicShipmentFields.PNET);
-			PNLT = mapOFields.get(BasicShipmentFields.PNLT);
-			DNET = mapOFields.get(BasicShipmentFields.DNET);
-			DNLT = mapOFields.get(BasicShipmentFields.DNLT);			
+			PNET = Trackable.bigT(mapOFields.get(BasicShipmentFields.PNET));
+			PNLT = Trackable.bigT(mapOFields.get(BasicShipmentFields.PNLT));
+			DNET = Trackable.bigT(mapOFields.get(BasicShipmentFields.DNET));
+			DNLT = Trackable.bigT(mapOFields.get(BasicShipmentFields.DNLT));	
+			
 		} catch (NullPointerException e) {
+			System.err.println(e.getMessage());
+		} catch (DateTimeParseException e) {
 			System.err.println(e.getMessage());
 		}
 	}
@@ -87,19 +101,15 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 		return 0;
 	}
 
-	@Override
-	public String getOriginPlaceAndState() {
-		return originCity + ", " + originState;
-	}
-
-	@Override
-	public String getDestinationPlaceAndState() {
-		return destinationCity + ", " + destinationState;
-	}
 	
 	public String[] presentFdsToWriter() {
-		String[] r = {shipmentID, originCity, destinationCity , this.getSatusUpd(this)};
+		String[] r = {shipmentID, originCity, destinationCity ,this.getSatusUpd(this)};
 		return r;
+	}
+	
+	@Override
+	public String toString() {
+		return shipmentID;
 	}
 	
 
