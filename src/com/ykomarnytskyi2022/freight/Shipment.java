@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import com.ykomarnytskyi2022.exel_manipulation.FieldsTransmitter;
 
-public class Shipment extends Trackable implements Comparable<Shipment> {
+public class Shipment extends Trackable {
 	
 	private String organizationName;
 	@SuppressWarnings("unused")
@@ -97,12 +97,6 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 			Objects.equals(destinationState, ((Shipment) obj).destinationState);
 	}	
 	
-	@Override
-	public int compareTo(Shipment o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	public String[] presentFdsToWriter() {
 		String[] r = {shipmentID, originCity, destinationCity ,this.getSatusUpd(this), DNLT.toString() };
 		return r;
