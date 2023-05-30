@@ -113,7 +113,7 @@ public class Shipment extends Trackable {
 	}	
 	
 	public String[] presentFdsToWriter() {
-		String[] r = {shipmentID, originCity, destinationCity ,this.getSatusUpd(this), DNLT.toString() };
+		String[] r = {shipmentID, originCity, destinationCity ,this.getSatusUpd(this), status.toString()};
 		return r;
 	}
 	
