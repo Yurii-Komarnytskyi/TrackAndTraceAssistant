@@ -84,6 +84,15 @@ public class ExcelParser extends PathSharer_BNN {
 			});
 		return tList;
 	}
+	
+	static List<Set<FieldsTransmitter>> readFromMultipleFiles (Set<ExcelParser> pList) {
+		List<Set<FieldsTransmitter>> tList = new ArrayList<>();
+		pList.stream()
+			.forEach(parsing -> {
+				tList.add(parsing.parseFreightDataInSingleFile());
+			});
+		return tList;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		return this.filePath.equals(obj.toString());

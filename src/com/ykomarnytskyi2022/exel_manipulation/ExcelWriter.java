@@ -4,7 +4,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,8 +33,19 @@ class ExcelWriter extends PathSharer_BNN {
 		this.sheetName = sheetName;
 	}
 
-	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
+	static List<Shipment> pickRelevantToday(List<Shipment> parsedFreight) {
+		LocalDateTime today = LocalDateTime.now();
+		return parsedFreight.stream().filter(sh -> {
+			return (sh.getDNLT().getDayOfMonth() == today.getDayOfMonth()
+					&& sh.getDNLT().getMonth() == today.getMonth())
+					|| (sh.getPNET().getDayOfMonth() == today.getDayOfMonth()
+							&& sh.getPNET().getMonth() == today.getMonth());
+		}).collect(Collectors.toList());
+	}
 
+	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
+				
+		Collections.sort(parsedFreight, (sh1, sh2) -> {return sh1.getNextStopNLT() - sh2.getNextStopNLT();}) ;
 		try {
 			FileInputStream fis = new FileInputStream(pathToCleanFile);
 			Workbook wb = WorkbookFactory.create(fis);
@@ -70,7 +83,7 @@ class ExcelWriter extends PathSharer_BNN {
 		listOfParsedFiles.stream()
 			.map(fieldsTransm -> mapFromFieldsTransToShipment(fieldsTransm))	
 			.forEach(shipm -> {
-				this.writeToExcel(shipm);
+				this.writeToExcel(pickRelevantToday(shipm));
 			});
 	}
 
