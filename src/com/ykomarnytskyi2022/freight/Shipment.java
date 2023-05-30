@@ -22,7 +22,6 @@ public class Shipment extends Trackable {
 	private String destinationState;  
 	private LocalDateTime PNET; 
 	private LocalDateTime PNLT; 
-	@SuppressWarnings("unused")
 	private LocalDateTime DNET; 
 	private LocalDateTime DNLT; 
 	
@@ -32,6 +31,22 @@ public class Shipment extends Trackable {
 
 	public String getDestinationCity() {
 		return destinationCity;
+	}
+
+	public LocalDateTime getPNET() {
+		return PNET;
+	}
+
+	public LocalDateTime getPNLT() {
+		return PNLT;
+	}
+
+	public LocalDateTime getDNET() {
+		return DNET;
+	}
+
+	public LocalDateTime getDNLT() {
+		return DNLT;
 	}
 
 	public String getOriginState() {
