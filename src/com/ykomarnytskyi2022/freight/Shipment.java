@@ -21,7 +21,6 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 	private String originState; 
 	private String destinationState;  
 	private LocalDateTime PNET; 
-	@SuppressWarnings("unused")
 	private LocalDateTime PNLT; 
 	@SuppressWarnings("unused")
 	private LocalDateTime DNET; 
@@ -42,7 +41,10 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 	public String getDestinationState() {
 		return destinationState;
 	}
-
+	public int getNextStopNLT() {
+		LocalDateTime nextStop = (this.status.ordinal() <= 3)? PNLT : DNLT;
+		return nextStop.getHour();
+	}
 	@Override
 	public String getOriginPlaceAndState() {
 		return originCity + ", " + originState;
@@ -101,9 +103,8 @@ public class Shipment extends Trackable implements Comparable<Shipment> {
 		return 0;
 	}
 
-	
 	public String[] presentFdsToWriter() {
-		String[] r = {shipmentID, originCity, destinationCity ,this.getSatusUpd(this)};
+		String[] r = {shipmentID, originCity, destinationCity ,this.getSatusUpd(this), DNLT.toString() };
 		return r;
 	}
 	
