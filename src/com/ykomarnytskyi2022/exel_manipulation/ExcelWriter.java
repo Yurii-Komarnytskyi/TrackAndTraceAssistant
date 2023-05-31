@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -41,6 +42,19 @@ class ExcelWriter extends PathSharer_BNN {
 					|| (sh.getPNET().getDayOfMonth() == today.getDayOfMonth()
 							&& sh.getPNET().getMonth() == today.getMonth());
 		}).collect(Collectors.toList());
+	}
+	static <T extends Shipment> List<T> pickRelevantByPredicate(List<T> parsedFreight, Predicate<T> tester) {
+		return parsedFreight.stream()
+				.filter(sh -> tester.test(sh))
+				.collect(Collectors.toList());
+	}
+	
+	static <T extends Shipment> boolean pickRelevantToday(T shipm) {
+		LocalDateTime today = LocalDateTime.now();
+		return (shipm.getDNLT().getDayOfMonth() == today.getDayOfMonth()
+				&& shipm.getDNLT().getMonth() == today.getMonth())
+				|| (shipm.getPNET().getDayOfMonth() == today.getDayOfMonth()
+						&& shipm.getPNET().getMonth() == today.getMonth());
 	}
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
@@ -83,7 +97,7 @@ class ExcelWriter extends PathSharer_BNN {
 		listOfParsedFiles.stream()
 			.map(fieldsTransm -> mapFromFieldsTransToShipment(fieldsTransm))	
 			.forEach(shipm -> {
-				this.writeToExcel(pickRelevantToday(shipm));
+				this.writeToExcel(pickRelevantByPredicate(shipm, ExcelWriter::pickRelevantToday));
 			});
 	}
 
