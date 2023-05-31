@@ -34,15 +34,7 @@ class ExcelWriter extends PathSharer_BNN {
 		this.sheetName = sheetName;
 	}
 
-	static List<Shipment> pickRelevantToday(List<Shipment> parsedFreight) {
-		LocalDateTime today = LocalDateTime.now();
-		return parsedFreight.stream().filter(sh -> {
-			return (sh.getDNLT().getDayOfMonth() == today.getDayOfMonth()
-					&& sh.getDNLT().getMonth() == today.getMonth())
-					|| (sh.getPNET().getDayOfMonth() == today.getDayOfMonth()
-							&& sh.getPNET().getMonth() == today.getMonth());
-		}).collect(Collectors.toList());
-	}
+
 	static <T extends Shipment> List<T> pickRelevantByPredicate(List<T> parsedFreight, Predicate<T> tester) {
 		return parsedFreight.stream()
 				.filter(sh -> tester.test(sh))
