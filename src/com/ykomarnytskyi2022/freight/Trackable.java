@@ -43,8 +43,7 @@ public abstract class Trackable {
 			body = ifd + s.getDestinationCity() + "?";
 			break;
 		default:
-			body = "No Carrier Yet";
-			break;
+			return "No Carrier Yet";
 		}
 
 		return formalGreeting() + body;
