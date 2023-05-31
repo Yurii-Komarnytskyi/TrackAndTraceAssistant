@@ -101,17 +101,14 @@ public class Shipment extends Trackable {
 	public int hashCode() {	
 		return Objects.hash(originCity, destinationCity, originState, destinationState, PNET, DNLT);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof Shipment && 
 			Objects.equals(shipmentID, ((Shipment) obj).shipmentID) &&
-			Objects.equals(organizationName, ((Shipment) obj).organizationName) && 
-			Objects.equals(originCity, ((Shipment) obj).originCity) && 
-			Objects.equals(originState, ((Shipment) obj).originState) && 
-			Objects.equals(destinationCity, ((Shipment) obj).destinationCity) && 
-			Objects.equals(destinationState, ((Shipment) obj).destinationState);
+			Objects.equals(organizationName, ((Shipment) obj).organizationName);
 	}	
-	
+
 	public String[] presentFdsToWriter() {
 		String[] r = {shipmentID, originCity, destinationCity ,this.getSatusUpd(this), status.toString()};
 		return r;
