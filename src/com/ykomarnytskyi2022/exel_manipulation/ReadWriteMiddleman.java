@@ -48,10 +48,10 @@ class ReadWriteMiddleman {
 		testSet.add(new ExcelParser(write.CENTRIA_PATH, write.SEARCH_RESULTS));
 		testSet.add(new ExcelParser(write.STEEL_PATH, write.SEARCH_RESULTS));
 		
-//		ReadWriteMiddleman tool = new ReadWriteMiddleman(write, testSet);
-		ReadWriteMiddleman tool = new ReadWriteMiddleman(write, new ExcelParser(write.CENTRIA_PATH, write.SEARCH_RESULTS));
+		ReadWriteMiddleman tool = new ReadWriteMiddleman(write, testSet);
+//		ReadWriteMiddleman toolCentria= new ReadWriteMiddleman(write, new ExcelParser(write.CENTRIA_PATH, write.SEARCH_RESULTS));
 			
-		tool.readAndWrite(ExcelWriter::pickThoseDeliveringToday);
+		tool.readAndWrite(ExcelWriter::pickThoseShippingToday);
 
 	}
 	

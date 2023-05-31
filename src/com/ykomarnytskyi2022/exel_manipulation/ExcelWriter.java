@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.ykomarnytskyi2022.freight.Shipment;
+import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
 class ExcelWriter extends PathSharer_BNN {
 
@@ -51,17 +52,27 @@ class ExcelWriter extends PathSharer_BNN {
 	}
 
 	static <T extends Shipment> boolean pickThoseShippingToday(T shipm) {
-		return shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
-				&& shipm.getPNET().getMonth() == TODAY.getMonth();
+		return ((shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
+				&& shipm.getPNET().getMonth() == TODAY.getMonth())
+				|| (shipm.getPNLT().getDayOfMonth() == TODAY.getDayOfMonth()
+						&& shipm.getPNLT().getMonth() == TODAY.getMonth()))
+				&& shipm.getStatus().ordinal() < ShipmentStatus.CONFIRMED_PU.ordinal();
 	}
+
 	static <T extends Shipment> boolean pickThoseDeliveringToday(T shipm) {
-		return shipm.getDNET().getDayOfMonth() == TODAY.getDayOfMonth()
-				&& shipm.getDNET().getMonth() == TODAY.getMonth();
+		return (shipm.getDNET().getDayOfMonth() == TODAY.getDayOfMonth()
+				&& shipm.getDNET().getMonth() == TODAY.getMonth())
+				|| (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
+						&& shipm.getDNLT().getMonth() == TODAY.getMonth());
 	}
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
 				
-		Collections.sort(parsedFreight, (sh1, sh2) -> {return sh1.getNextStopNLT() - sh2.getNextStopNLT();}) ;
+		Collections.sort(parsedFreight, (sh1, sh2) -> {
+			if (sh1.getScac().equals(sh2.getScac())) // new if statement
+				return 0;
+			return sh1.getNextStopNLT() - sh2.getNextStopNLT();
+		});
 		try {
 			FileInputStream fis = new FileInputStream(pathToCleanFile);
 			Workbook wb = WorkbookFactory.create(fis);
