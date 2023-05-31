@@ -14,7 +14,6 @@ public class Shipment extends Trackable {
 	private String shipmentNumber;
 	private String shipmentID;
 	private ShipmentStatus status;
-	@SuppressWarnings("unused")
 	private String scac;
 	private String originCity;
 	private String destinationCity;
@@ -31,6 +30,9 @@ public class Shipment extends Trackable {
 
 	public String getDestinationCity() {
 		return destinationCity;
+	}
+	public String getScac() {
+		return scac;
 	}
 
 	public LocalDateTime getPNET() {
