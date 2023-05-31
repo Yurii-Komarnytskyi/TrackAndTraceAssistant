@@ -28,6 +28,7 @@ class ExcelWriter extends PathSharer_BNN {
 	private String sheetName;
 	private int latestWrittenRowIndex = 0;
 	private int witeShipmentIntoRowNumber = 0;
+	private static final LocalDateTime TODAY = LocalDateTime.now();  
 
 	public ExcelWriter(String filePath, String sheetName) {
 		pathToCleanFile = filePath;
@@ -35,18 +36,27 @@ class ExcelWriter extends PathSharer_BNN {
 	}
 
 
-	static <T extends Shipment> List<T> pickRelevantByPredicate(List<T> parsedFreight, Predicate<T> tester) {
+	@SuppressWarnings("unchecked")
+	static <T extends Shipment> List<Shipment> pickRelevantByPredicate(List<Shipment> parsedFreight, Predicate<T> tester) {
 		return parsedFreight.stream()
-				.filter(sh -> tester.test(sh))
+				.filter(sh -> tester.test((T) sh))
 				.collect(Collectors.toList());
 	}
 	
 	static <T extends Shipment> boolean pickRelevantToday(T shipm) {
-		LocalDateTime today = LocalDateTime.now();
-		return (shipm.getDNLT().getDayOfMonth() == today.getDayOfMonth()
-				&& shipm.getDNLT().getMonth() == today.getMonth())
-				|| (shipm.getPNET().getDayOfMonth() == today.getDayOfMonth()
-						&& shipm.getPNET().getMonth() == today.getMonth());
+		return (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
+				&& shipm.getDNLT().getMonth() == TODAY.getMonth())
+				|| (shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
+						&& shipm.getPNET().getMonth() == TODAY.getMonth());
+	}
+
+	static <T extends Shipment> boolean pickThoseShippingToday(T shipm) {
+		return shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
+				&& shipm.getPNET().getMonth() == TODAY.getMonth();
+	}
+	static <T extends Shipment> boolean pickThoseDeliveringToday(T shipm) {
+		return shipm.getDNET().getDayOfMonth() == TODAY.getDayOfMonth()
+				&& shipm.getDNET().getMonth() == TODAY.getMonth();
 	}
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
@@ -84,12 +94,14 @@ class ExcelWriter extends PathSharer_BNN {
 		}
 	}
 
-	<T extends Shipment> void writeToExcelFromMultFiles(List<Set<FieldsTransmitter>> listOfParsedFiles) {
+	<T extends Shipment> void writeToExcelFromMultFiles(
+			List<Set<FieldsTransmitter>> listOfParsedFiles,
+			Predicate<T> tester) {
 
 		listOfParsedFiles.stream()
 			.map(fieldsTransm -> mapFromFieldsTransToShipment(fieldsTransm))	
 			.forEach(shipm -> {
-				this.writeToExcel(pickRelevantByPredicate(shipm, ExcelWriter::pickRelevantToday));
+				this.writeToExcel(pickRelevantByPredicate(shipm, tester));
 			});
 	}
 
