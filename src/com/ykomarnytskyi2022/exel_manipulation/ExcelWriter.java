@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
-class ExcelWriter extends PathSharer_BNN {
+class ExcelWriter extends PathSharer_BNN { 
 
 	private String pathToCleanFile;
 	private String sheetName;
@@ -69,7 +69,7 @@ class ExcelWriter extends PathSharer_BNN {
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
 				
 		Collections.sort(parsedFreight, (sh1, sh2) -> {
-			if (sh1.getScac().equals(sh2.getScac())) // new if statement
+			if (sh1.getScac().equals(sh2.getScac()))
 				return 0;
 			return sh1.getNextStopNLT() - sh2.getNextStopNLT();
 		});

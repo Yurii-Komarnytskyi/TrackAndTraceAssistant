@@ -44,14 +44,14 @@ class ReadWriteMiddleman {
 		ExcelWriter write = new ExcelWriter(ExcelWriter.WRITE_TO, ExcelWriter.SHEET_NAME);
 		Set<ExcelParser> testSet = new LinkedHashSet<>();
 		
-		testSet.add(new ExcelParser(write.MHS_PATH, write.SEARCH_RESULTS));
 		testSet.add(new ExcelParser(write.CENTRIA_PATH, write.SEARCH_RESULTS));
+		testSet.add(new ExcelParser(write.MHS_PATH, write.SEARCH_RESULTS));
 		testSet.add(new ExcelParser(write.STEEL_PATH, write.SEARCH_RESULTS));
 		
 		ReadWriteMiddleman tool = new ReadWriteMiddleman(write, testSet);
 //		ReadWriteMiddleman toolCentria= new ReadWriteMiddleman(write, new ExcelParser(write.CENTRIA_PATH, write.SEARCH_RESULTS));
 			
-		tool.readAndWrite(ExcelWriter::pickThoseShippingToday);
+		tool.readAndWrite(ExcelWriter::pickThoseDeliveringToday);
 
 	}
 	
