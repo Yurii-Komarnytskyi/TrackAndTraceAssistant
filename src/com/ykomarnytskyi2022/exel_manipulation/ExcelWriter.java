@@ -25,55 +25,48 @@ import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
 class ExcelWriter extends PathSharer_BNN { 
 
-	private String pathToCleanFile;
+	private String blankFilePath;
 	private String sheetName;
-	private int latestWrittenRowIndex = 0;
-	private int witeShipmentIntoRowNumber = 0;
+	private int latestWrittenRow = 0;
+	private int writeIntoRow = 0;
 	private static final LocalDateTime TODAY = LocalDateTime.now();  
 
-	public ExcelWriter(String filePath, String sheetName) {
-		pathToCleanFile = filePath;
+	
+	public ExcelWriter(String blankFilePath, String sheetName) {
+		this.blankFilePath = blankFilePath;
 		this.sheetName = sheetName;
 	}
-
-
-	@SuppressWarnings("unchecked")
-	static <T extends Shipment> List<Shipment> pickRelevantByPredicate(List<Shipment> parsedFreight, Predicate<T> tester) {
-		return parsedFreight.stream()
-				.filter(sh -> tester.test((T) sh))
-				.collect(Collectors.toList());
-	}
 	
+	public ExcelWriter() {
+		
+	}	
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
 				
-		Collections.sort(parsedFreight, (sh1, sh2) -> {
-			if (sh1.getScac().equals(sh2.getScac()))
-				return 0;
-			return sh1.getNextStopNLT() - sh2.getNextStopNLT();
-		});
+		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
+		
 		try {
-			FileInputStream fis = new FileInputStream(pathToCleanFile);
-			Workbook wb = WorkbookFactory.create(fis);
-			Sheet sheet = wb.getSheet(sheetName);
+			FileInputStream fileInputStream = new FileInputStream(blankFilePath);
+			Workbook workbook = WorkbookFactory.create(fileInputStream);
+			Sheet sheet = workbook.getSheet(sheetName);
 
 			// Runs through ROWS
-			IntStream.range(latestWrittenRowIndex, latestWrittenRowIndex + parsedFreight.size()).forEach(n -> {
+			IntStream.range(latestWrittenRow, latestWrittenRow + parsedFreight.size()).forEach(n -> {
 				Row currentRow = sheet.getRow(n);
-				String[] arr = parsedFreight.get(witeShipmentIntoRowNumber).presentFdsToWriter();
-				witeShipmentIntoRowNumber++;
+				List<String> shipmentFields = parsedFreight.get(writeIntoRow).provideFieldsForExcelCells();
+				writeIntoRow++;
 				
 //				Runs through CELLS 
-				IntStream.range(0, arr.length).forEach(i -> {
+				IntStream.range(0, shipmentFields.size()).forEach(i -> {
 					Cell currentCell = currentRow.createCell(i);
-					currentCell.setCellValue(arr[i]);
+					currentCell.setCellValue(shipmentFields.get(i));
 				});
 			});
 
-			FileOutputStream fos = new FileOutputStream(pathToCleanFile);
-			wb.write(fos);
-			latestWrittenRowIndex += parsedFreight.size() + 2;
-			witeShipmentIntoRowNumber = 0;
+			FileOutputStream fileOutputStream = new FileOutputStream(blankFilePath);
+			workbook.write(fileOutputStream);
+			latestWrittenRow += parsedFreight.size() + 2;
+			writeIntoRow = 0;
 
 		} catch (EncryptedDocumentException e) {
 			e.printStackTrace();
@@ -84,16 +77,23 @@ class ExcelWriter extends PathSharer_BNN {
 		}
 	}
 
-	<T extends Shipment> void writeToExcelFromMultFiles(
-			List<Set<FieldsTransmitter>> listOfParsedFiles,
+	<T extends Shipment> void writeToExcelFromMultFiles(List<Set<FieldsTransmitter>> listOfParsedFiles,
 			Predicate<T> tester) {
 
 		listOfParsedFiles.stream()
 			.map(fieldsTransm -> mapFromFieldsTransToShipment(fieldsTransm))	
-			.forEach(shipm -> {
-				this.writeToExcel(pickRelevantByPredicate(shipm, tester));
+			.forEach(shipment -> {
+				this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester));
 			});
 	}
+	
+	@SuppressWarnings("unchecked")
+	static <T extends Shipment> List<Shipment> selectFreightComplyingWithPredicate(List<Shipment> parsedFreight, Predicate<T> predicate) {
+		return parsedFreight.stream()
+				.filter(shipment -> predicate.test((T) shipment))
+				.collect(Collectors.toList());
+	}
+	
 
 	static List<Shipment> mapFromFieldsTransToShipment(Set<FieldsTransmitter> ftSet) {
 		return ftSet.stream()
@@ -123,6 +123,16 @@ class ExcelWriter extends PathSharer_BNN {
 					&& shipm.getDNET().getMonth() == TODAY.getMonth())
 					|| (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
 							&& shipm.getDNLT().getMonth() == TODAY.getMonth());
+		}
+		
+		static <T extends Shipment> void sortUrgentFreightFirstAndSameCarrierAdjacent(List<Shipment> parsedFreight) {
+			Collections.sort(parsedFreight, (shipmentA, shipmentB) -> {
+				boolean sameCarrier = shipmentA.getScac().equals(shipmentB.getScac()); 
+				if (sameCarrier) {
+					return 0;				
+				}
+				return shipmentA.getNextStopNLT() - shipmentB.getNextStopNLT();
+			});
 		}
 
 	}
