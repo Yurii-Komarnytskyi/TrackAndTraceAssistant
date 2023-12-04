@@ -8,17 +8,17 @@ import java.util.stream.Stream;
 
 import com.ykomarnytskyi2022.freight.Shipment;
 
-class ReadWriteMiddleman {
+class ParsingAndWritingDelegator {
 	private Set<List<Shipment>> readyToWriteLists = new LinkedHashSet<>(); 
 	private Set<ExcelParser> fromSetOfFiles = new LinkedHashSet<>();
 	private ExcelWriter toFile;
 	private ExcelParser fromFile;
 	
-	public ReadWriteMiddleman(ExcelWriter ew, Set<ExcelParser> ep) {
+	public ParsingAndWritingDelegator(ExcelWriter ew, Set<ExcelParser> ep) {
 		toFile = ew;
 		fromSetOfFiles = ep;
 	}
-	public ReadWriteMiddleman(ExcelWriter ew, ExcelParser ep) {
+	public ParsingAndWritingDelegator(ExcelWriter ew, ExcelParser ep) {
 		toFile = ew;
 		fromFile = ep;
 	}
@@ -26,7 +26,7 @@ class ReadWriteMiddleman {
 	public <T extends Shipment> void readAndWrite(Predicate<T> predicate) {
 		if(fromFile != null) {
 			List<Shipment> shipmList = ExcelWriter.mapFromFieldsTransToShipment(fromFile.parseFreightDataInSingleFile());
-			toFile.writeToExcel(ExcelWriter.pickRelevantByPredicate(shipmList, predicate));
+			toFile.writeToExcel(ExcelWriter.selectFreightComplyingWithPredicate(shipmList, predicate));
 		} else if (fromSetOfFiles.size() > 0) {
 			toFile.writeToExcelFromMultFiles(ExcelParser.readFromMultipleFiles(fromSetOfFiles), predicate);
 		}
@@ -48,10 +48,10 @@ class ReadWriteMiddleman {
 		testSet.add(new ExcelParser(write.MHS_PATH, write.SEARCH_RESULTS));
 		testSet.add(new ExcelParser(write.STEEL_PATH, write.SEARCH_RESULTS));
 		
-		ReadWriteMiddleman tool = new ReadWriteMiddleman(write, testSet);
+		ParsingAndWritingDelegator tool = new ParsingAndWritingDelegator(write, testSet);
 //		ReadWriteMiddleman toolCentria= new ReadWriteMiddleman(write, new ExcelParser(write.CENTRIA_PATH, write.SEARCH_RESULTS));
 			
-		tool.readAndWrite(ExcelWriter::pickThoseDeliveringToday);
+		tool.readAndWrite(ExcelWriter.SortingStrategies::chooseFreightThatShipsToday);
 
 	}
 	
