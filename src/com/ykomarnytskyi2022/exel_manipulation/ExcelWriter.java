@@ -44,27 +44,6 @@ class ExcelWriter extends PathSharer_BNN {
 				.collect(Collectors.toList());
 	}
 	
-	static <T extends Shipment> boolean pickRelevantToday(T shipm) {
-		return (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
-				&& shipm.getDNLT().getMonth() == TODAY.getMonth())
-				|| (shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
-						&& shipm.getPNET().getMonth() == TODAY.getMonth());
-	}
-
-	static <T extends Shipment> boolean pickThoseShippingToday(T shipm) {
-		return ((shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
-				&& shipm.getPNET().getMonth() == TODAY.getMonth())
-				|| (shipm.getPNLT().getDayOfMonth() == TODAY.getDayOfMonth()
-						&& shipm.getPNLT().getMonth() == TODAY.getMonth()))
-				&& shipm.getStatus().ordinal() < ShipmentStatus.CONFIRMED_PU.ordinal();
-	}
-
-	static <T extends Shipment> boolean pickThoseDeliveringToday(T shipm) {
-		return (shipm.getDNET().getDayOfMonth() == TODAY.getDayOfMonth()
-				&& shipm.getDNET().getMonth() == TODAY.getMonth())
-				|| (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
-						&& shipm.getDNLT().getMonth() == TODAY.getMonth());
-	}
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
 				
@@ -121,5 +100,30 @@ class ExcelWriter extends PathSharer_BNN {
 				.map(ft -> new Shipment(ft))
 				.collect(Collectors.toCollection(ArrayList::new));
 	}
+	
+	static class SortingStrategies {
+		
+		static <T extends Shipment> boolean chooseShipmentsRelevantToday(T shipm) {
+			return (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
+					&& shipm.getDNLT().getMonth() == TODAY.getMonth())
+					|| (shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
+							&& shipm.getPNET().getMonth() == TODAY.getMonth());
+		}
 
+		static <T extends Shipment> boolean chooseFreightThatShipsToday(T shipm) {
+			return ((shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
+					&& shipm.getPNET().getMonth() == TODAY.getMonth())
+					|| (shipm.getPNLT().getDayOfMonth() == TODAY.getDayOfMonth()
+							&& shipm.getPNLT().getMonth() == TODAY.getMonth()))
+					&& shipm.getStatus().ordinal() < ShipmentStatus.CONFIRMED_PU.ordinal();
+		}
+
+		static <T extends Shipment> boolean chooseFreightThatDeliversToday(T shipm) {
+			return (shipm.getDNET().getDayOfMonth() == TODAY.getDayOfMonth()
+					&& shipm.getDNET().getMonth() == TODAY.getMonth())
+					|| (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
+							&& shipm.getDNLT().getMonth() == TODAY.getMonth());
+		}
+
+	}
 }
