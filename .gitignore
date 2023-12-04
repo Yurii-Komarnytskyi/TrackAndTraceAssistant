@@ -1,2 +1,5 @@
-# Ignore `bin` dir
 bin/
+target/
+.classpath
+.project
+.settings/
