@@ -2,6 +2,8 @@ package com.ykomarnytskyi2022.freight;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -111,9 +113,8 @@ public class Shipment extends Trackable {
 			Objects.equals(organizationName, ((Shipment) obj).organizationName);
 	}	
 
-	public String[] presentFdsToWriter() {
-		String[] r = {shipmentID, originCity + " - " + destinationCity ,this.getSatusUpd(this), status.toString(), scac};
-		return r;
+	public List<String> provideFieldsForExcelCells() {
+		return Arrays.asList(shipmentID, originCity + " - " + destinationCity ,this.getSatusUpd(this), status.toString(), scac);	
 	}
 	
 	@Override
