@@ -5,10 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -23,28 +21,27 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
-class ExcelWriter extends PathSharer_BNN { 
+class ExcelWriter {
 
 	private String blankFilePath;
 	private String sheetName;
 	private int latestWrittenRow = 0;
 	private int writeIntoRow = 0;
-	private static final LocalDateTime TODAY = LocalDateTime.now();  
+	private static final LocalDateTime TODAY = LocalDateTime.now();
 
-	
 	public ExcelWriter(String blankFilePath, String sheetName) {
 		this.blankFilePath = blankFilePath;
 		this.sheetName = sheetName;
 	}
-	
+
 	public ExcelWriter() {
-		
-	}	
+
+	}
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
-				
+
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
-		
+
 		try {
 			FileInputStream fileInputStream = new FileInputStream(blankFilePath);
 			Workbook workbook = WorkbookFactory.create(fileInputStream);
@@ -55,7 +52,7 @@ class ExcelWriter extends PathSharer_BNN {
 				Row currentRow = sheet.getRow(n);
 				List<String> shipmentFields = parsedFreight.get(writeIntoRow).provideFieldsForExcelCells();
 				writeIntoRow++;
-				
+
 //				Runs through CELLS 
 				IntStream.range(0, shipmentFields.size()).forEach(i -> {
 					Cell currentCell = currentRow.createCell(i);
@@ -77,32 +74,22 @@ class ExcelWriter extends PathSharer_BNN {
 		}
 	}
 
-	<T extends Shipment> void writeToExcelFromMultFiles(List<Set<FieldsTransmitter>> listOfParsedFiles,
+	<T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> shipmentsFromDifferentCustomers,
 			Predicate<T> tester) {
 
-		listOfParsedFiles.stream()
-			.map(fieldsTransm -> mapFromFieldsTransToShipment(fieldsTransm))	
-			.forEach(shipment -> {
-				this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester));
-			});
+		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
+			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester));
+		});
 	}
-	
-	@SuppressWarnings("unchecked")
-	static <T extends Shipment> List<Shipment> selectFreightComplyingWithPredicate(List<Shipment> parsedFreight, Predicate<T> predicate) {
-		return parsedFreight.stream()
-				.filter(shipment -> predicate.test((T) shipment))
-				.collect(Collectors.toList());
-	}
-	
 
-	static List<Shipment> mapFromFieldsTransToShipment(Set<FieldsTransmitter> ftSet) {
-		return ftSet.stream()
-				.map(ft -> new Shipment(ft))
-				.collect(Collectors.toCollection(ArrayList::new));
+	@SuppressWarnings("unchecked")
+	static <T extends Shipment> List<Shipment> selectFreightComplyingWithPredicate(List<Shipment> parsedFreight,
+			Predicate<T> predicate) {
+		return parsedFreight.stream().filter(shipment -> predicate.test((T) shipment)).collect(Collectors.toList());
 	}
-	
+
 	static class SortingStrategies {
-		
+
 		static <T extends Shipment> boolean chooseShipmentsRelevantToday(T shipm) {
 			return (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
 					&& shipm.getDNLT().getMonth() == TODAY.getMonth())
@@ -124,12 +111,12 @@ class ExcelWriter extends PathSharer_BNN {
 					|| (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
 							&& shipm.getDNLT().getMonth() == TODAY.getMonth());
 		}
-		
+
 		static <T extends Shipment> void sortUrgentFreightFirstAndSameCarrierAdjacent(List<Shipment> parsedFreight) {
 			Collections.sort(parsedFreight, (shipmentA, shipmentB) -> {
-				boolean sameCarrier = shipmentA.getScac().equals(shipmentB.getScac()); 
+				boolean sameCarrier = shipmentA.getScac().equals(shipmentB.getScac());
 				if (sameCarrier) {
-					return 0;				
+					return 0;
 				}
 				return shipmentA.getNextStopNLT() - shipmentB.getNextStopNLT();
 			});
