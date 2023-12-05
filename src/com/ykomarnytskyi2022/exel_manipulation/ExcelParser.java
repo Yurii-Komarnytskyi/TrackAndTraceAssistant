@@ -18,30 +18,22 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 // TO DO 
 // add error handling, this is a MUST
-// add dynamic paths to the file itself and the sheet
 
 public class ExcelParser extends PathSharer_BNN {
 	
-	private FileInputStream fis;
-	private Workbook wb;
+	private FileInputStream fileInputStream;
+	private Workbook workbook;
 	private Sheet sheet;
 	private Row headerRow;
-	private String filePath;
+	private String excelFilePath;
 	
-	
-	private int countFilledColumns() {
-		return sheet.getRow(0).getLastCellNum();
-	}
-	private int countFilledRows() {
-		return sheet.getLastRowNum();
-	}
 	
 	public ExcelParser(String filePath, String sheetName) {
-		this.filePath = filePath;
+		this.excelFilePath = filePath;
 		try {
-			fis = new FileInputStream(filePath);
-			wb = WorkbookFactory.create(fis);
-			sheet = wb.getSheet(sheetName);
+			fileInputStream = new FileInputStream(filePath);
+			workbook = WorkbookFactory.create(fileInputStream);
+			sheet = workbook.getSheet(sheetName);
 			headerRow = sheet.getRow(0);
 			
 		} catch (EncryptedDocumentException e) {
@@ -52,20 +44,26 @@ public class ExcelParser extends PathSharer_BNN {
 			e.printStackTrace();
 		}
 	}
-	FieldsTransmitter readRowHorizontally(int rowNum, int columnsTotal) {
-		FieldsTransmitter ft = new FieldsTransmitter();
+	
+	public ExcelParser() {
+		
+	}
+		
+	FieldsTransmitter readRowHorizontally(int rowIndex, int columnsTotal) {
+		FieldsTransmitter fieldsTransmitter = new FieldsTransmitter();
 		try {
-			Row r = sheet.getRow(rowNum);
+			Row row = sheet.getRow(rowIndex);
 			IntStream.range(0, columnsTotal).
 				forEach((n) -> {
-					Cell c = r.getCell(n);
-					ft.absorb(headerRow.getCell(n).getStringCellValue(), c.getStringCellValue());
+					Cell cell = row.getCell(n);
+					fieldsTransmitter.absorb(headerRow.getCell(n).getStringCellValue(), cell.getStringCellValue());
 				});
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return  ft;
+		return  fieldsTransmitter;
 	}
+	
 	Set<FieldsTransmitter> parseFreightDataInSingleFile() {
 		Set<FieldsTransmitter> parsedFreightData = new LinkedHashSet<>();
 		IntStream.range(1, this.countFilledRows())
@@ -74,6 +72,14 @@ public class ExcelParser extends PathSharer_BNN {
 			});
 
 		return parsedFreightData;
+	}
+	
+	private int countFilledColumns() {
+		return sheet.getRow(0).getLastCellNum();
+	}
+	
+	private int countFilledRows() {
+		return sheet.getLastRowNum();
 	}
 
 	static List<Set<FieldsTransmitter>> readFromMultipleFiles (List<ExcelParser> pList) {
@@ -95,14 +101,14 @@ public class ExcelParser extends PathSharer_BNN {
 	}
 	@Override
 	public boolean equals(Object obj) {
-		return this.filePath.equals(obj.toString());
+		return this.excelFilePath.equals(obj.toString());
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(filePath);
+		return Objects.hashCode(excelFilePath);
 	}
 	@Override
 	public String toString() {
-		return this.filePath;
+		return this.excelFilePath;
 	}
 }
