@@ -16,9 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-// TO DO 
-// add error handling, this is a MUST
-
 public class ExcelParser extends PathSharer_BNN {
 	
 	private FileInputStream fileInputStream;
@@ -81,24 +78,7 @@ public class ExcelParser extends PathSharer_BNN {
 	private int countFilledRows() {
 		return sheet.getLastRowNum();
 	}
-
-	static List<Set<FieldsTransmitter>> readFromMultipleFiles (List<ExcelParser> pList) {
-		List<Set<FieldsTransmitter>> tList = new ArrayList<>();
-		pList.stream()
-			.forEach(parsing -> {
-				tList.add(parsing.parseFreightDataInSingleFile());
-			});
-		return tList;
-	}
 	
-	static List<Set<FieldsTransmitter>> readFromMultipleFiles (Set<ExcelParser> pList) {
-		List<Set<FieldsTransmitter>> tList = new ArrayList<>();
-		pList.stream()
-			.forEach(parsing -> {
-				tList.add(parsing.parseFreightDataInSingleFile());
-			});
-		return tList;
-	}
 	@Override
 	public boolean equals(Object obj) {
 		return this.excelFilePath.equals(obj.toString());
