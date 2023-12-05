@@ -7,10 +7,10 @@ import java.util.stream.Stream;
 
 public abstract class Trackable {
 
-	static String es = "Could you advise on an ETA to the shipper in ";
-	static String ifp = "Could you advise if this load has been picked up in ";
-	static String er = "Could you advise on an ETA to the receiver in ";
-	static String ifd = "Could you advise if this load has been delivered in ";
+	static String shipperETA = "Could you advise on an ETA to the shipper in ";
+	static String ifGotLoaded = "Could you advise if this load has been picked up in ";
+	static String receiverETA = "Could you advise on an ETA to the receiver in ";
+	static String ifGotoaded = "Could you advise if this load has been delivered in ";
 
 	static LocalDateTime convertToLocalDateTime(String str) {
 		DateTimeFormatter formattedStr = DateTimeFormatter
@@ -19,34 +19,34 @@ public abstract class Trackable {
 		return ldt;
 	}
 
-	public String formalGreeting() {
+	public String getFormalGreeting() {
 		int currentHour = LocalDateTime.now().getHour();
 		if (currentHour >= 18 && currentHour <= 21)
 			return "Good evening, \n";
 		return "Good " + ((currentHour >= 6 && currentHour <= 12) ? "morning, \n" : "afternoon, \n");
 	}
 
-	public String getSatusUpd(Shipment s) {
+	public String getSatusUpdate(Shipment s) {
 		String body;
 
 		switch (s.getStatus().ordinal()) {
 		case 2:
-			body = es + s.getOriginPlaceAndState() + "?";
+			body = shipperETA + s.getOriginPlaceAndState() + "?";
 			break;
 		case 3:
-			body = ifp + s.getOriginCity() + "?";
+			body = ifGotLoaded + s.getOriginCity() + "?";
 			break;
 		case 4:
-			body = er + s.getDestinationPlaceAndState() + "?";
+			body = receiverETA + s.getDestinationPlaceAndState() + "?";
 			break;
 		case 5:
-			body = ifd + s.getDestinationCity() + "?";
+			body = ifGotoaded + s.getDestinationCity() + "?";
 			break;
 		default:
-			return "No Carrier Yet";
+			return "No Carrier";
 		}
 
-		return formalGreeting() + body;
+		return getFormalGreeting() + body;
 	}
 
 	String prettifyLocationName(String str) {
