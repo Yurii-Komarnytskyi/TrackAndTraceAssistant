@@ -95,9 +95,15 @@ class ExcelWriter {
 
 	private void closeWorkbookInputAndOutputStreams() {
 		try {
-			workbook.close();
-			fileInputStream.close();
-			fileOutputStream.close();
+			if (workbook != null) {
+				workbook.close();
+			}
+			if (fileInputStream != null) {
+				fileInputStream.close();
+			}
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
