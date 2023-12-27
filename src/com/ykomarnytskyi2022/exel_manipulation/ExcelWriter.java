@@ -27,6 +27,9 @@ class ExcelWriter {
 	private String sheetName;
 	private int latestWrittenRow = 0;
 	private int writeIntoRow = 0;
+	private FileInputStream fileInputStream;
+	private Workbook workbook;
+	private FileOutputStream fileOutputStream;
 	private static final LocalDateTime TODAY = LocalDateTime.now();
 
 	public ExcelWriter(String blankFilePath, String sheetName) {
@@ -43,8 +46,7 @@ class ExcelWriter {
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
 
 		try {
-			FileInputStream fileInputStream = new FileInputStream(blankFilePath);
-			Workbook workbook = WorkbookFactory.create(fileInputStream);
+			initWorkbookInputAndOutputStreams();
 			Sheet sheet = workbook.getSheet(sheetName);
 
 			// Runs through ROWS
@@ -59,18 +61,13 @@ class ExcelWriter {
 					currentCell.setCellValue(shipmentFields.get(i));
 				});
 			});
-
-			FileOutputStream fileOutputStream = new FileOutputStream(blankFilePath);
 			workbook.write(fileOutputStream);
 			latestWrittenRow += parsedFreight.size() + 2;
 			writeIntoRow = 0;
-
-		} catch (EncryptedDocumentException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			closeWorkbookInputAndOutputStreams();
 		}
 	}
 
@@ -80,6 +77,30 @@ class ExcelWriter {
 		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
 			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester));
 		});
+	}
+
+	private void initWorkbookInputAndOutputStreams() {
+		try {
+			fileInputStream = new FileInputStream(blankFilePath);
+			workbook = WorkbookFactory.create(fileInputStream);
+			fileOutputStream = new FileOutputStream(blankFilePath);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (EncryptedDocumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void closeWorkbookInputAndOutputStreams() {
+		try {
+			workbook.close();
+			fileInputStream.close();
+			fileOutputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
