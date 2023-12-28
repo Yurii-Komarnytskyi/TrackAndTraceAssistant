@@ -55,11 +55,14 @@ class ExcelWriter {
 	}
 
 	void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
-		Sheet sheet = workbook.getSheet(sheetInfo.getSheetName());
+		Sheet sheet = (workbook.getSheet(sheetInfo.getSheetName()) != null)
+				? workbook.getSheet(sheetInfo.getSheetName())
+				: workbook.createSheet(sheetInfo.getSheetName());
 
 		// Runs through ROWS
 		IntStream.range(sheetInfo.getLatestWrittenRow(), sheetInfo.getLatestWrittenRow() + parsedFreight.size())
 				.forEach(n -> {
+					sheet.createRow(n);
 					Row currentRow = sheet.getRow(n);
 					List<String> shipmentFields = parsedFreight.get(sheetInfo.getWriteIntoRow())
 							.provideFieldsForExcelCells();
@@ -67,7 +70,8 @@ class ExcelWriter {
 
 					// Runs through CELLS
 					IntStream.range(0, shipmentFields.size()).forEach(i -> {
-						Cell currentCell = currentRow.createCell(i);
+						currentRow.createCell(i);
+						Cell currentCell = currentRow.getCell(i);
 						currentCell.setCellValue(shipmentFields.get(i));
 					});
 				});
