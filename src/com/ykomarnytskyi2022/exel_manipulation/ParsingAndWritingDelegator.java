@@ -2,7 +2,6 @@ package com.ykomarnytskyi2022.exel_manipulation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import com.ykomarnytskyi2022.freight.Shipment;
 
@@ -20,7 +19,7 @@ class ParsingAndWritingDelegator {
 
 	}
 	
-	public <T extends Shipment> void readAndWrite(Predicate<T> predicate) {
+	public <T extends Shipment> void readAndWrite() {
 		if (shipmentsFromDifferentCustomers.size() > 0) {
 			fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
 		}
@@ -44,7 +43,7 @@ class ParsingAndWritingDelegator {
 		
 		ParsingAndWritingDelegator delegator = new ParsingAndWritingDelegator(excelWriter, freightFromCustomers);
 			
-		delegator.readAndWrite(ExcelWriter.SortingStrategies::chooseFreightThatDeliversToday);
+		delegator.readAndWrite();
 		System.out.println("THE END");
 
 	}
