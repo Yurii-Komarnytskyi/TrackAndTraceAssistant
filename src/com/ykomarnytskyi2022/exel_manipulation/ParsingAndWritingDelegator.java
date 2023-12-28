@@ -45,6 +45,7 @@ class ParsingAndWritingDelegator {
 		ParsingAndWritingDelegator delegator = new ParsingAndWritingDelegator(excelWriter, freightFromCustomers);
 			
 		delegator.readAndWrite(ExcelWriter.SortingStrategies::chooseFreightThatShipsToday);
+		System.out.println("THE END");
 
 	}
 	
