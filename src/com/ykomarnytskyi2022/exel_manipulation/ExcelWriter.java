@@ -25,8 +25,6 @@ class ExcelWriter {
 
 	private String blankFilePath;
 	private String sheetName;
-	private int latestWrittenRow = 0;
-	private int writeIntoRow = 0;
 	private FileInputStream fileInputStream;
 	private Workbook workbook;
 	private FileOutputStream fileOutputStream;
@@ -41,29 +39,14 @@ class ExcelWriter {
 
 	}
 
-	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight) {
-
+	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
-
 		try {
 			initWorkbookInputAndOutputStreams();
-			Sheet sheet = workbook.getSheet(sheetName);
-
-			// Runs through ROWS
-			IntStream.range(latestWrittenRow, latestWrittenRow + parsedFreight.size()).forEach(n -> {
-				Row currentRow = sheet.getRow(n);
-				List<String> shipmentFields = parsedFreight.get(writeIntoRow).provideFieldsForExcelCells();
-				writeIntoRow++;
-
-//				Runs through CELLS 
-				IntStream.range(0, shipmentFields.size()).forEach(i -> {
-					Cell currentCell = currentRow.createCell(i);
-					currentCell.setCellValue(shipmentFields.get(i));
-				});
-			});
+			populateRowsWithparsedFreight(parsedFreight, sheetInfo);
 			workbook.write(fileOutputStream);
-			latestWrittenRow += parsedFreight.size() + 2;
-			writeIntoRow = 0;
+			sheetInfo.setLatestWrittenRow(parsedFreight.size() + 2);
+			sheetInfo.resetWriteIntoRowToZero();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -71,11 +54,30 @@ class ExcelWriter {
 		}
 	}
 
+	void populateRowsWithparsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+		Sheet sheet = workbook.getSheet(sheetInfo.getSheetName());
+
+		// Runs through ROWS
+		IntStream.range(sheetInfo.getLatestWrittenRow(), sheetInfo.getLatestWrittenRow() + parsedFreight.size())
+				.forEach(n -> {
+					Row currentRow = sheet.getRow(n);
+					List<String> shipmentFields = parsedFreight.get(sheetInfo.getWriteIntoRow())
+							.provideFieldsForExcelCells();
+					sheetInfo.incrementWriteIntoRowByOne();
+
+					// Runs through CELLS
+					IntStream.range(0, shipmentFields.size()).forEach(i -> {
+						Cell currentCell = currentRow.createCell(i);
+						currentCell.setCellValue(shipmentFields.get(i));
+					});
+				});
+	}
+
 	<T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> shipmentsFromDifferentCustomers,
 			Predicate<T> tester) {
-
+		ProgressOfSheetPopulation progressOfSheetPopulation = new ProgressOfSheetPopulation(sheetName);
 		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
-			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester));
+			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester), progressOfSheetPopulation);
 		});
 	}
 
