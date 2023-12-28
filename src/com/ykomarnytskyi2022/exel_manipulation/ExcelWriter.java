@@ -43,7 +43,7 @@ class ExcelWriter {
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
 		try {
 			initWorkbookInputAndOutputStreams();
-			populateRowsWithparsedFreight(parsedFreight, sheetInfo);
+			populateRowsWithParsedFreight(parsedFreight, sheetInfo);
 			workbook.write(fileOutputStream);
 			sheetInfo.setLatestWrittenRow(parsedFreight.size() + 2);
 			sheetInfo.resetWriteIntoRowToZero();
@@ -54,7 +54,7 @@ class ExcelWriter {
 		}
 	}
 
-	void populateRowsWithparsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+	void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		Sheet sheet = workbook.getSheet(sheetInfo.getSheetName());
 
 		// Runs through ROWS
