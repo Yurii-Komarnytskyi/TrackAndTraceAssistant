@@ -22,7 +22,7 @@ class ParsingAndWritingDelegator {
 	
 	public <T extends Shipment> void readAndWrite(Predicate<T> predicate) {
 		if (shipmentsFromDifferentCustomers.size() > 0) {
-			fileBeingWritten.writeToExcelFromMultFiles(shipmentsFromDifferentCustomers, predicate);
+			fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
 		}
 	}
 	
@@ -44,7 +44,7 @@ class ParsingAndWritingDelegator {
 		
 		ParsingAndWritingDelegator delegator = new ParsingAndWritingDelegator(excelWriter, freightFromCustomers);
 			
-		delegator.readAndWrite(ExcelWriter.SortingStrategies::chooseFreightThatShipsToday);
+		delegator.readAndWrite(ExcelWriter.SortingStrategies::chooseFreightThatDeliversToday);
 		System.out.println("THE END");
 
 	}

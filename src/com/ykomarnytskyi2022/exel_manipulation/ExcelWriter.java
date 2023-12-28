@@ -24,6 +24,7 @@ import com.ykomarnytskyi2022.freight.ShipmentStatus;
 class ExcelWriter {
 
 	private String blankFilePath;
+	@SuppressWarnings("unused")
 	private String sheetName;
 	private FileInputStream fileInputStream;
 	private Workbook workbook;
@@ -37,6 +38,24 @@ class ExcelWriter {
 
 	public ExcelWriter() {
 
+	}
+
+	<T extends Shipment> void writePickupsAndDeliveriesOnSeparateSheets(
+			List<List<Shipment>> shipmentsFromDifferentCustomers) {
+		ProgressOfSheetPopulation progressOfSheetPopulationPU = new ProgressOfSheetPopulation("Shipping");
+		ProgressOfSheetPopulation progressOfSheetPopulationDEL = new ProgressOfSheetPopulation("Delivering");
+
+		writeToExcelFromMultFiles(shipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatShipsToday,
+				progressOfSheetPopulationPU);
+		writeToExcelFromMultFiles(shipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatDeliversToday,
+				progressOfSheetPopulationDEL);
+	}
+
+	<T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> shipmentsFromDifferentCustomers,
+			Predicate<T> tester, ProgressOfSheetPopulation progressOfSheetPopulation) {
+		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
+			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester), progressOfSheetPopulation);
+		});
 	}
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
@@ -75,14 +94,6 @@ class ExcelWriter {
 						currentCell.setCellValue(shipmentFields.get(i));
 					});
 				});
-	}
-
-	<T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> shipmentsFromDifferentCustomers,
-			Predicate<T> tester) {
-		ProgressOfSheetPopulation progressOfSheetPopulation = new ProgressOfSheetPopulation(sheetName);
-		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
-			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester), progressOfSheetPopulation);
-		});
 	}
 
 	private void initWorkbookInputAndOutputStreams() {
