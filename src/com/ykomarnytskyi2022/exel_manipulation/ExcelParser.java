@@ -1,14 +1,16 @@
 package com.ykomarnytskyi2022.exel_manipulation;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -19,31 +21,48 @@ import com.ykomarnytskyi2022.freight.Shipment;
 
 public class ExcelParser {
 
-	private FileInputStream fileInputStream;
+	@SuppressWarnings("unused")
+	private InputStream inputStream;
 	private Workbook workbook;
+	private Path path;
+	private String sheetName;
 	private Sheet sheet;
 	private Row headerRow;
-	private String excelFilePath;
 
 	public ExcelParser(String filePath, String sheetName) {
-		this.excelFilePath = filePath;
-		try {
-			fileInputStream = new FileInputStream(filePath);
-			workbook = WorkbookFactory.create(fileInputStream);
-			sheet = workbook.getSheet(sheetName);
-			headerRow = sheet.getRow(0);
-
-		} catch (EncryptedDocumentException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		path = Paths.get(filePath);
+		this.sheetName = sheetName;
 	}
 
 	public ExcelParser() {
 
+	}
+
+	List<Shipment> parseFreightDataFromFile() {
+		initInputStreamAndWorkbook();
+		sheet = workbook.getSheet(sheetName);
+		headerRow = sheet.getRow(0);
+
+		List<Shipment> parsedFreightData = new ArrayList<>();
+		IntStream.range(1, this.countFilledRows()).forEach((n) -> {
+			Shipment parsedRow = parseRowHorizontally(n, this.countFilledColumns());
+			parsedFreightData.add(parsedRow);
+		});
+		return parsedFreightData;
+	}
+
+	private void initInputStreamAndWorkbook() {
+
+		try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
+				Workbook workbook = WorkbookFactory.create(inputStream)) {
+			this.inputStream = inputStream;
+			this.workbook = workbook;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	Shipment parseRowHorizontally(int rowIndex, int columnsTotal) {
@@ -60,15 +79,6 @@ public class ExcelParser {
 		return new Shipment(fieldsTransmitter);
 	}
 
-	List<Shipment> parseFreightDataFromFile() {
-		List<Shipment> parsedFreightData = new ArrayList<>();
-		IntStream.range(1, this.countFilledRows()).forEach((n) -> {
-			Shipment parsedRow = parseRowHorizontally(n, this.countFilledColumns());
-			parsedFreightData.add(parsedRow);
-		});
-		return parsedFreightData;
-	}
-
 	private int countFilledColumns() {
 		return sheet.getRow(0).getLastCellNum();
 	}
@@ -79,16 +89,16 @@ public class ExcelParser {
 
 	@Override
 	public boolean equals(Object obj) {
-		return this.excelFilePath.equals(obj.toString());
+		return this.path.equals(obj);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(excelFilePath);
+		return Objects.hashCode(path);
 	}
 
 	@Override
 	public String toString() {
-		return this.excelFilePath;
+		return this.path.toString();
 	}
 }
