@@ -1,9 +1,12 @@
 package com.ykomarnytskyi2022.exel_manipulation;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +14,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -23,17 +25,18 @@ import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
 class ExcelWriter {
 
+	@SuppressWarnings("unused")
 	private String blankFilePath;
 	@SuppressWarnings("unused")
 	private String sheetName;
-	private FileInputStream fileInputStream;
 	private Workbook workbook;
-	private FileOutputStream fileOutputStream;
+	private Path path;
 	private static final LocalDateTime TODAY = LocalDateTime.now();
 
 	public ExcelWriter(String blankFilePath, String sheetName) {
 		this.blankFilePath = blankFilePath;
 		this.sheetName = sheetName;
+		this.path = Paths.get(blankFilePath);
 	}
 
 	public ExcelWriter() {
@@ -60,17 +63,22 @@ class ExcelWriter {
 
 	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
-		try {
-			initWorkbookInputAndOutputStreams();
+
+		try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
+				Workbook workbook = WorkbookFactory.create(inputStream);
+				OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.WRITE)) {
+
+			this.workbook = workbook;
 			populateRowsWithParsedFreight(parsedFreight, sheetInfo);
-			workbook.write(fileOutputStream);
+			workbook.write(outputStream);
 			sheetInfo.setLatestWrittenRow(parsedFreight.size() + 2);
 			sheetInfo.resetWriteIntoRowToZero();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			closeWorkbookInputAndOutputStreams();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
 		}
+
 	}
 
 	void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
@@ -94,36 +102,6 @@ class ExcelWriter {
 						currentCell.setCellValue(shipmentFields.get(i));
 					});
 				});
-	}
-
-	private void initWorkbookInputAndOutputStreams() {
-		try {
-			fileInputStream = new FileInputStream(blankFilePath);
-			workbook = WorkbookFactory.create(fileInputStream);
-			fileOutputStream = new FileOutputStream(blankFilePath);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (EncryptedDocumentException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void closeWorkbookInputAndOutputStreams() {
-		try {
-			if (workbook != null) {
-				workbook.close();
-			}
-			if (fileInputStream != null) {
-				fileInputStream.close();
-			}
-			if (fileOutputStream != null) {
-				fileOutputStream.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@SuppressWarnings("unchecked")
