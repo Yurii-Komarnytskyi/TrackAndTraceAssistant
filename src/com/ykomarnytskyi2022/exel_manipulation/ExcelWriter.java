@@ -37,6 +37,7 @@ class ExcelWriter {
 		this.blankFilePath = blankFilePath;
 		this.sheetName = sheetName;
 		this.path = Paths.get(blankFilePath);
+		cleanUpTheSheetsInAnExcelFile();
 	}
 
 	public ExcelWriter() {
@@ -102,6 +103,21 @@ class ExcelWriter {
 						currentCell.setCellValue(shipmentFields.get(i));
 					});
 				});
+	}
+
+	private void cleanUpTheSheetsInAnExcelFile() {
+		try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
+				Workbook workbook = WorkbookFactory.create(inputStream);
+				OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.WRITE)) {
+			for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+				workbook.removeSheetAt(i);
+			}
+			workbook.write(outputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
