@@ -44,7 +44,7 @@ public class ExcelParser {
 		headerRow = sheet.getRow(0);
 
 		List<Shipment> parsedFreightData = new ArrayList<>();
-		IntStream.range(1, this.countFilledRows()).forEach((n) -> {
+		IntStream.rangeClosed(1, this.countFilledRows()).forEach((n) -> {
 			Shipment parsedRow = parseRowHorizontally(n, this.countFilledColumns());
 			parsedFreightData.add(parsedRow);
 		});
@@ -84,7 +84,7 @@ public class ExcelParser {
 	}
 
 	private int countFilledRows() {
-		return sheet.getLastRowNum() + 1;
+		return sheet.getLastRowNum();
 	}
 
 	@Override
