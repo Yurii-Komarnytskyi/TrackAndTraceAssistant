@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -26,17 +25,14 @@ import com.ykomarnytskyi2022.freight.ShipmentStatus;
 class ExcelWriter {
 
 	@SuppressWarnings("unused")
-	private String blankFilePath;
-	@SuppressWarnings("unused")
 	private String sheetName;
 	private Workbook workbook;
 	private Path path;
 	private static final LocalDateTime TODAY = LocalDateTime.now();
 
-	public ExcelWriter(String blankFilePath, String sheetName) {
-		this.blankFilePath = blankFilePath;
+	public ExcelWriter(Path path, String sheetName) {
 		this.sheetName = sheetName;
-		this.path = Paths.get(blankFilePath);
+		this.path = path;
 		cleanUpTheSheetsInAnExcelFile();
 	}
 

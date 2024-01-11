@@ -31,7 +31,7 @@ class ParsingAndWritingDelegator {
 	
 	public static void main(String[] args) {
 		
-		ExcelWriter excelWriter = new ExcelWriter(LocalMachinePaths.blankExelFilePath, LocalMachinePaths.SHEET_NAME);
+		ExcelWriter excelWriter = new ExcelWriter(LocalMachinePaths.blankExelFile, LocalMachinePaths.SHEET_NAME);
 		List<List<Shipment>> freightFromCustomers = new ArrayList<>();
 		
 		List<Shipment> c = (new ExcelParser(LocalMachinePaths.customerC, LocalMachinePaths.SEARCH_RESULTS)).parseFreightDataFromFile();

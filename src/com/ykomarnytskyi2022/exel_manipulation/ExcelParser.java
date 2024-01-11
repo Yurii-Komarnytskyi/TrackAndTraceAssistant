@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,8 @@ public class ExcelParser {
 	private Sheet sheet;
 	private Row headerRow;
 
-	public ExcelParser(String filePath, String sheetName) {
-		path = Paths.get(filePath);
+	public ExcelParser(Path path, String sheetName) {
+		this.path = path;
 		this.sheetName = sheetName;
 	}
 
