@@ -1,4 +1,4 @@
-package com.ykomarnytskyi2022.exel_manipulation;
+package com.ykomarnytskyi2022.excel_manipulation;
 
 class ProgressOfSheetPopulation {
 	private String sheetName;
