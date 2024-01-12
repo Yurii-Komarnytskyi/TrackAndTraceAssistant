@@ -1,52 +1,50 @@
 package com.ykomarnytskyi2022.excel_manipulation;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ykomarnytskyi2022.freight.Shipment;
 
-class ParsingAndWritingDelegator { 
-	
-	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>(); 
+public class ParsingAndWritingDelegator {
+
 	private ExcelWriter fileBeingWritten;
-	
-	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, List<List<Shipment>> shipments) {
+	private List<Path> pathsToSourceExcelFiles = new ArrayList<>();;
+	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
+
+	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, Path... pathsToSourceExcelFiles) {
 		this.fileBeingWritten = fileBeingWritten;
-		this.shipmentsFromDifferentCustomers = shipments;
-	} 
-	
+		for (Path path : pathsToSourceExcelFiles) {
+			this.pathsToSourceExcelFiles.add(path);
+		}
+	}
+
 	public ParsingAndWritingDelegator() {
 
 	}
-	
+
 	public <T extends Shipment> void readAndWrite() {
-		if (shipmentsFromDifferentCustomers.size() > 0) {
-			fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
+		if (shipmentsFromDifferentCustomers.size() == 0) {
+			pathsToSourceExcelFiles.stream().forEach(path -> {
+				List<Shipment> shipments = (new ExcelParser(path, LocalMachinePaths.SEARCH_RESULTS))
+						.parseFreightDataFromFile();
+				shipmentsFromDifferentCustomers.add(shipments);
+			});
 		}
+		fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
 	}
-	
-	boolean offerShipments(List<Shipment> shipments) {
-		return shipmentsFromDifferentCustomers.add(shipments);
+
+	boolean offerPathToSourceExcelFile(Path path) {
+		return pathsToSourceExcelFiles.add(path);
 	}
-	
+
 	public static void main(String[] args) {
-		
+
 		ExcelWriter excelWriter = new ExcelWriter(LocalMachinePaths.blankExelFile, LocalMachinePaths.SHEET_NAME);
-		List<List<Shipment>> freightFromCustomers = new ArrayList<>();
-		
-		List<Shipment> c = (new ExcelParser(LocalMachinePaths.customerC, LocalMachinePaths.SEARCH_RESULTS)).parseFreightDataFromFile();
-		List<Shipment> m = (new ExcelParser(LocalMachinePaths.customerM, LocalMachinePaths.SEARCH_RESULTS)).parseFreightDataFromFile();
-		List<Shipment> s = (new ExcelParser(LocalMachinePaths.customerS, LocalMachinePaths.SEARCH_RESULTS)).parseFreightDataFromFile();
-		
-		freightFromCustomers.add(c);
-		freightFromCustomers.add(m);
-		freightFromCustomers.add(s);
-		
-		ParsingAndWritingDelegator delegator = new ParsingAndWritingDelegator(excelWriter, freightFromCustomers);
-			
+		ParsingAndWritingDelegator delegator = new ParsingAndWritingDelegator(excelWriter, LocalMachinePaths.customerC, LocalMachinePaths.customerM, LocalMachinePaths.customerS );
+
 		delegator.readAndWrite();
 		System.out.println("THE END");
-
 	}
-	
+
 }
