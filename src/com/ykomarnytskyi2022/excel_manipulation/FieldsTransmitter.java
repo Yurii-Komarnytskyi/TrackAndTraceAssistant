@@ -1,4 +1,4 @@
-package com.ykomarnytskyi2022.excel_manipulation;
+	package com.ykomarnytskyi2022.excel_manipulation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,25 +8,30 @@ public class FieldsTransmitter {
 
 	private Map<BasicShipmentFields, String> absorbedFeilds = new HashMap<>();
 
-	public void absorb(String key, String stringCellValue) {
-		StringBuilder invalidFields = new StringBuilder("Failed to add these fields:");
+	void absorb(String key, String stringCellValue) {
+		StringBuilder invalidFields = new StringBuilder("Failed to add this field ");
 		try {
-			if (BasicShipmentFields.fromString(key) == null) 
-				throw new NullPointerException(key);
+			if (BasicShipmentFields.fromString(key) == null) {
+				throw new IllegalArgumentException(key);				
+			}
 			absorbedFeilds.put(BasicShipmentFields.fromString(key), stringCellValue);
 			
-		} catch (NullPointerException e) {
-			invalidFields.append(", " + e.getMessage());
+		} catch (IllegalArgumentException e) {
+			invalidFields.append(key + " : " + e.getMessage());
 		}
 	}
 
 	public Map<BasicShipmentFields, String> getMapOfAbsorbedFields() {
 		return absorbedFeilds;
 	}
+	
+	public void clearMapOfAbsorbedFields() {
+		absorbedFeilds.clear();
+	}
 
 	@Override
 	public String toString() {
-		return absorbedFeilds.getOrDefault(BasicShipmentFields.SHIPMENT_ID, "this is a default val, sth. went wrong!");
+		return absorbedFeilds.getOrDefault(BasicShipmentFields.SHIPMENT_ID, "this is a default value something went wrong!");
 	}
 
 }	
