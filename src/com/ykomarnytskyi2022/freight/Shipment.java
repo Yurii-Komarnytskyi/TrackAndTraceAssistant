@@ -26,22 +26,22 @@ public class Shipment extends Trackable {
 	private LocalDateTime DNET;
 	private LocalDateTime DNLT;
 
-	public Shipment(FieldsTransmitter ft) {
-		Map<BasicShipmentFields, String> mapOFields = ft.getMapOfAbsorbedFields();
+	public Shipment(FieldsTransmitter fieldsTransmitter) {
+		Map<BasicShipmentFields, String> fields = fieldsTransmitter.getMapOfAbsorbedFields();
 		try {
-			organizationName = mapOFields.get(BasicShipmentFields.ORGANIZATION_NAME);
-			shipmentNumber = mapOFields.get(BasicShipmentFields.SHIPMENT_NUMBER);
-			shipmentID = mapOFields.get(BasicShipmentFields.SHIPMENT_ID);
-			status = ShipmentStatus.fromString(mapOFields.get(BasicShipmentFields.STATUS));
-			scac = mapOFields.get(BasicShipmentFields.SCAC_CODE);
-			originCity = this.prettifyLocationName(mapOFields.get(BasicShipmentFields.ORIGIN));
-			destinationCity = this.prettifyLocationName(mapOFields.get(BasicShipmentFields.DESTINATION));
-			originState = mapOFields.get(BasicShipmentFields.ORIGIN_STATE);
-			destinationState = mapOFields.get(BasicShipmentFields.DESTINATION_STATE);
-			PNET = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.PNET));
-			PNLT = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.PNLT));
-			DNET = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.DNET));
-			DNLT = Trackable.convertToLocalDateTime(mapOFields.get(BasicShipmentFields.DNLT));
+			organizationName = fields.get(BasicShipmentFields.ORGANIZATION_NAME);
+			shipmentNumber = fields.get(BasicShipmentFields.SHIPMENT_NUMBER);
+			shipmentID = fields.get(BasicShipmentFields.SHIPMENT_ID);
+			status = ShipmentStatus.fromString(fields.get(BasicShipmentFields.STATUS));
+			scac = fields.get(BasicShipmentFields.SCAC_CODE);
+			originCity = this.prettifyLocationName(fields.get(BasicShipmentFields.ORIGIN));
+			destinationCity = this.prettifyLocationName(fields.get(BasicShipmentFields.DESTINATION));
+			originState = fields.get(BasicShipmentFields.ORIGIN_STATE);
+			destinationState = fields.get(BasicShipmentFields.DESTINATION_STATE);
+			PNET = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.PNET));
+			PNLT = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.PNLT));
+			DNET = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.DNET));
+			DNLT = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.DNLT));
 
 		} catch (NullPointerException e) {
 			System.err.println(e.getMessage());
