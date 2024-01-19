@@ -25,13 +25,12 @@ import com.ykomarnytskyi2022.freight.ShipmentStatus;
 class ExcelWriter {
 
 	@SuppressWarnings("unused")
-	private String sheetName;
+	private String sheetName = LocalMachinePaths.DEFAULT_SHEET_NAME;
 	private Workbook workbook;
 	private Path path;
 	private static final LocalDateTime TODAY = LocalDateTime.now();
 
-	public ExcelWriter(Path path, String sheetName) {
-		this.sheetName = sheetName;
+	public ExcelWriter(Path path) {
 		this.path = path;
 		cleanUpTheSheetsInAnExcelFile();
 	}
@@ -51,14 +50,14 @@ class ExcelWriter {
 				progressOfSheetPopulationDEL);
 	}
 
-	<T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> shipmentsFromDifferentCustomers,
+	private <T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> shipmentsFromDifferentCustomers,
 			Predicate<T> tester, ProgressOfSheetPopulation progressOfSheetPopulation) {
 		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
 			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester), progressOfSheetPopulation);
 		});
 	}
 
-	<T extends Shipment> void writeToExcel(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+	private <T extends Shipment> void writeToExcel(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
 
 		try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
@@ -78,7 +77,7 @@ class ExcelWriter {
 
 	}
 
-	void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+	private void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		Sheet sheet = (workbook.getSheet(sheetInfo.getSheetName()) != null)
 				? workbook.getSheet(sheetInfo.getSheetName())
 				: workbook.createSheet(sheetInfo.getSheetName());
@@ -115,9 +114,13 @@ class ExcelWriter {
 			e.printStackTrace();
 		}
 	}
+	
+	void setSheetName(String sheetName) {
+		this.sheetName = sheetName;
+	}
 
 	@SuppressWarnings("unchecked")
-	static <T extends Shipment> List<Shipment> selectFreightComplyingWithPredicate(List<Shipment> parsedFreight,
+	private static <T extends Shipment> List<Shipment> selectFreightComplyingWithPredicate(List<Shipment> parsedFreight,
 			Predicate<T> predicate) {
 		return parsedFreight.stream().filter(shipment -> predicate.test((T) shipment)).collect(Collectors.toList());
 	}
