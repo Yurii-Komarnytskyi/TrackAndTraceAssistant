@@ -9,7 +9,7 @@ class LocalMachinePaths {
 	static Path customerS = Paths.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\resources\\S.xls"); 
 	static Path customerM = Paths.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\resources\\M.xls"); 
 
-	static final String SHEET_NAME = "Sheet1";
+	static final String DEFAULT_SHEET_NAME = "Sheet1";
 	static final String SEARCH_RESULTS = "Search Results";
 	static Path blankExelFile = Paths.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\resources\\FreightDemo.xls");
 }
