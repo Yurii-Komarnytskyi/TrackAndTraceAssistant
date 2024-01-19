@@ -9,7 +9,7 @@ import com.ykomarnytskyi2022.freight.Shipment;
 public class ParsingAndWritingDelegator {
 
 	private ExcelWriter fileBeingWritten;
-	private List<Path> pathsToSourceExcelFiles = new ArrayList<>();;
+	private List<Path> pathsToSourceExcelFiles = new ArrayList<>();
 	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
 
 	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, Path... pathsToSourceExcelFiles) {
@@ -18,7 +18,7 @@ public class ParsingAndWritingDelegator {
 			this.pathsToSourceExcelFiles.add(path);
 		}
 	}
-	
+
 	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten) {
 		this.fileBeingWritten = fileBeingWritten;
 	}
@@ -28,18 +28,30 @@ public class ParsingAndWritingDelegator {
 	}
 
 	public <T extends Shipment> void readAndWrite() {
-		if (shipmentsFromDifferentCustomers.size() == 0) {
+		if (gotAvailablePathsToSourceExcelFiles()) {
+			initShipmentsFromDifferentCustomers();
+			fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
+		} else {
+			System.err.println("No paths to source excel files were provided");
+		}
+	}
+
+	public boolean offerPathToSourceExcelFile(Path path) {
+		return pathsToSourceExcelFiles.add(path);
+	}
+	
+	private void initShipmentsFromDifferentCustomers() {
+		if (shipmentsFromDifferentCustomers.size() == 0 && gotAvailablePathsToSourceExcelFiles()) {
 			pathsToSourceExcelFiles.stream().forEach(path -> {
 				List<Shipment> shipments = (new ExcelParser(path, LocalMachinePaths.SEARCH_RESULTS))
 						.parseFreightDataFromFile();
 				shipmentsFromDifferentCustomers.add(shipments);
 			});
 		}
-		fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
 	}
-
-	public boolean offerPathToSourceExcelFile(Path path) {
-		return pathsToSourceExcelFiles.add(path);
+	
+	private boolean gotAvailablePathsToSourceExcelFiles() {
+		return this.pathsToSourceExcelFiles.size() > 0;
 	}
 
 }
