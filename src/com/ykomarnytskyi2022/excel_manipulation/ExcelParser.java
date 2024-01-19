@@ -64,7 +64,7 @@ public class ExcelParser {
 		}
 	}
 
-	Shipment parseRowHorizontally(int rowIndex, int columnsTotal) {
+	private Shipment parseRowHorizontally(int rowIndex, int columnsTotal) {
 		FieldsTransmitter fieldsTransmitter = new FieldsTransmitter();
 		try {
 			Row row = sheet.getRow(rowIndex);
