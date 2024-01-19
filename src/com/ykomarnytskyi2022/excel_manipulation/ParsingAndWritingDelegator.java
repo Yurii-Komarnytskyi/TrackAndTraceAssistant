@@ -13,10 +13,14 @@ public class ParsingAndWritingDelegator {
 	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
 
 	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, Path... pathsToSourceExcelFiles) {
-		this.fileBeingWritten = fileBeingWritten;
+		this(fileBeingWritten);
 		for (Path path : pathsToSourceExcelFiles) {
 			this.pathsToSourceExcelFiles.add(path);
 		}
+	}
+	
+	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten) {
+		this.fileBeingWritten = fileBeingWritten;
 	}
 
 	public ParsingAndWritingDelegator() {
@@ -34,17 +38,8 @@ public class ParsingAndWritingDelegator {
 		fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
 	}
 
-	boolean offerPathToSourceExcelFile(Path path) {
+	public boolean offerPathToSourceExcelFile(Path path) {
 		return pathsToSourceExcelFiles.add(path);
-	}
-
-	public static void main(String[] args) {
-
-		ExcelWriter excelWriter = new ExcelWriter(LocalMachinePaths.blankExelFile, LocalMachinePaths.SHEET_NAME);
-		ParsingAndWritingDelegator delegator = new ParsingAndWritingDelegator(excelWriter, LocalMachinePaths.customerC, LocalMachinePaths.customerM, LocalMachinePaths.customerS );
-
-		delegator.readAndWrite();
-		System.out.println("THE END");
 	}
 
 }
