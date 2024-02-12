@@ -12,12 +12,12 @@ public class ExcelManipulationConfig {
 	@Bean
 	@Scope(scopeName = "prototype")
 	public ParsingAndWritingDelegator getParsingAndWritingDelegator(Path excelFileBeingWritten) {
-		return new ParsingAndWritingDelegator(getExcelWriter(excelFileBeingWritten));
+		return new ParsingAndWritingDelegator(getFreightExcelWriter(excelFileBeingWritten));
 	}
 		
 	@Bean
 	@Scope(scopeName = "prototype")
-	public FreightExcelWriter getExcelWriter(Path path) {
+	public ExcelWriter getFreightExcelWriter(Path path) {
 		return new FreightExcelWriter(path);
 	}
 	
