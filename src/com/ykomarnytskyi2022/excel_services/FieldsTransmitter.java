@@ -1,4 +1,4 @@
-	package com.ykomarnytskyi2022.excel_manipulation;
+	package com.ykomarnytskyi2022.excel_services;
 
 import java.util.HashMap;
 import java.util.Map;
