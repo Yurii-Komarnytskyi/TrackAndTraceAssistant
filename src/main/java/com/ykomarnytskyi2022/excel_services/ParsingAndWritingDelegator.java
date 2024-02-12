@@ -43,7 +43,7 @@ public class ParsingAndWritingDelegator {
 	private void initShipmentsFromDifferentCustomers() {
 		if (shipmentsFromDifferentCustomers.size() == 0 && gotAvailablePathsToSourceExcelFiles()) {
 			pathsToSourceExcelFiles.stream().forEach(path -> {
-				List<Shipment> shipments = (new ExcelParser(path, LocalMachinePaths.SEARCH_RESULTS))
+				List<Shipment> shipments = (new FreightExcelParser(path, LocalMachinePaths.SEARCH_RESULTS))
 						.parseFreightDataFromFile();
 				shipmentsFromDifferentCustomers.add(shipments);
 			});
