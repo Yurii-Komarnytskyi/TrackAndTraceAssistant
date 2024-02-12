@@ -18,7 +18,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.ykomarnytskyi2022.freight.Shipment;
 
-public class ExcelParser {
+public class FreightExcelParser implements ExcelParser {
 
 	@SuppressWarnings("unused")
 	private InputStream inputStream;
@@ -28,16 +28,17 @@ public class ExcelParser {
 	private Sheet sheet;
 	private Row headerRow;
 
-	public ExcelParser(Path path, String sheetName) {
+	public FreightExcelParser(Path path, String sheetName) {
 		this.path = path;
 		this.sheetName = sheetName;
 	}
 
-	public ExcelParser() {
+	public FreightExcelParser() {
 
 	}
 
-	List<Shipment> parseFreightDataFromFile() {
+	@Override
+	public List<Shipment> parseFreightDataFromFile() {
 		initInputStreamAndWorkbook();
 		sheet = workbook.getSheet(sheetName);
 		headerRow = sheet.getRow(0);

@@ -17,8 +17,8 @@ public class ExcelManipulationConfig {
 		
 	@Bean
 	@Scope(scopeName = "prototype")
-	public ExcelWriter getExcelWriter(Path path) {
-		return new ExcelWriter(path);
+	public FreightExcelWriter getExcelWriter(Path path) {
+		return new FreightExcelWriter(path);
 	}
 	
 }
