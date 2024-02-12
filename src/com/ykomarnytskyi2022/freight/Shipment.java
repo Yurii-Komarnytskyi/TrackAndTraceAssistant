@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ykomarnytskyi2022.excel_manipulation.FieldsTransmitter;
+import com.ykomarnytskyi2022.excel_services.FieldsTransmitter;
 
 public class Shipment extends Trackable {
 
