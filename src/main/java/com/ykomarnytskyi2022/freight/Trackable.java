@@ -15,8 +15,8 @@ public abstract class Trackable {
 	static LocalDateTime convertToLocalDateTime(String str) {
 		DateTimeFormatter formattedStr = DateTimeFormatter
 				.ofPattern(String.format("MM/dd/uu HH:mm '%s'", str.substring(str.length() - 2)));
-		LocalDateTime ldt = LocalDateTime.parse(str, formattedStr);
-		return ldt;
+		LocalDateTime localDateTime = LocalDateTime.parse(str, formattedStr);
+		return localDateTime;
 	}
 
 	public String getFormalGreeting() {
@@ -26,33 +26,13 @@ public abstract class Trackable {
 		return "Good " + ((currentHour >= 6 && currentHour <= 12) ? "morning, \n" : "afternoon, \n");
 	}
 
-	public String getSatusUpdate(Shipment shipment) {
-		StringBuilder body = new StringBuilder();
-		int loadStatusCode = shipment.getStatus().ordinal();
-		
-		if(loadStatusCode == 2) {
-			body.append(shipperETA).append(shipment.getOriginPlaceAndState()).append("?");
-		} else if (loadStatusCode == 3) {
-			body.append(gotLoaded).append(shipment.getOriginCity()).append("?");
-		} else if (loadStatusCode == 4 ) {
-			body.append(receiverETA).append(shipment.getDestinationPlaceAndState()).append("?");
-		} else if (loadStatusCode == 5) {
-			body.append(gotOffloaed).append(shipment.getDestinationCity()).append("?");
-		}  else {
-			return body.append(shipperETA).append(shipment.getOriginPlaceAndState()).append("?").toString();
-		}
-		return body.insert(0, getFormalGreeting()).toString();
-	}
 
 	String prettifyLocationName(String str) {
 		return Stream.of(str.trim().toLowerCase().split(" "))
 				.map(s -> (String.valueOf(s.charAt(0)).toUpperCase()).concat(s.substring(1)))
 				.collect(Collectors.joining(" "));
-
 	}
-
-	public abstract String getOriginPlaceAndState();
-
-	public abstract String getDestinationPlaceAndState();
+	
+	public abstract String getSatusUpdate();
 
 }
