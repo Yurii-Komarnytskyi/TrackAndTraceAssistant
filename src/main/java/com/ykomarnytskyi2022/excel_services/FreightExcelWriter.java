@@ -19,8 +19,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import com.ykomarnytskyi2022.freight.Shipment;
+import com.ykomarnytskyi2022.freight.ShipmentImpl;
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
+import com.ykomarnytskyi2022.freight.TimeFrameRequirements;
 
 class FreightExcelWriter implements ExcelWriter {
 
@@ -40,8 +41,8 @@ class FreightExcelWriter implements ExcelWriter {
 	}
 
 	@Override
-	public <T extends Shipment> void writePickupsAndDeliveriesOnSeparateSheets(
-			List<List<Shipment>> shipmentsFromDifferentCustomers) {
+	public <T extends ShipmentImpl> void writePickupsAndDeliveriesOnSeparateSheets(
+			List<List<ShipmentImpl>> shipmentsFromDifferentCustomers) {
 		ProgressOfSheetPopulation progressOfSheetPopulationPU = new ProgressOfSheetPopulation("Shipping");
 		ProgressOfSheetPopulation progressOfSheetPopulationDEL = new ProgressOfSheetPopulation("Delivering");
 
@@ -51,7 +52,7 @@ class FreightExcelWriter implements ExcelWriter {
 				progressOfSheetPopulationDEL);
 	}
 
-	private <T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> shipmentsFromDifferentCustomers,
+	private <T extends ShipmentImpl> void writeToExcelFromMultFiles(List<List<ShipmentImpl>> shipmentsFromDifferentCustomers,
 			Predicate<T> tester, ProgressOfSheetPopulation progressOfSheetPopulation) {
 		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
 			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester), progressOfSheetPopulation);
@@ -59,7 +60,7 @@ class FreightExcelWriter implements ExcelWriter {
 	}
 
 	@Override
-	public <T extends Shipment> void writeToExcel(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+	public <T extends ShipmentImpl> void writeToExcel(List<ShipmentImpl> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
 
 		try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
@@ -79,7 +80,7 @@ class FreightExcelWriter implements ExcelWriter {
 
 	}
 
-	private void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+	private void populateRowsWithParsedFreight(List<ShipmentImpl> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		Sheet sheet = (workbook.getSheet(sheetInfo.getSheetName()) != null)
 				? workbook.getSheet(sheetInfo.getSheetName())
 				: workbook.createSheet(sheetInfo.getSheetName());
@@ -122,36 +123,48 @@ class FreightExcelWriter implements ExcelWriter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T extends Shipment> List<Shipment> selectFreightComplyingWithPredicate(List<Shipment> parsedFreight,
+	private static <T extends ShipmentImpl> List<ShipmentImpl> selectFreightComplyingWithPredicate(List<ShipmentImpl> parsedFreight,
 			Predicate<T> predicate) {
 		return parsedFreight.stream().filter(shipment -> predicate.test((T) shipment)).collect(Collectors.toList());
 	}
 
 	static class SortingStrategies {
 
-		static <T extends Shipment> boolean chooseShipmentsRelevantToday(T shipm) {
-			return (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
-					&& shipm.getDNLT().getMonth() == TODAY.getMonth())
-					|| (shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
-							&& shipm.getPNET().getMonth() == TODAY.getMonth());
+		static <T extends ShipmentImpl> boolean chooseShipmentsRelevantToday(T shipm) {
+			return (shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_LATER_THAN)
+					.getDayOfMonth() == TODAY.getDayOfMonth()
+					&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_LATER_THAN)
+							.getMonth() == TODAY.getMonth())
+					|| (shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN)
+							.getDayOfMonth() == TODAY.getDayOfMonth()
+							&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN)
+									.getMonth() == TODAY.getMonth());
 		}
 
-		static <T extends Shipment> boolean chooseFreightThatShipsToday(T shipm) {
-			return ((shipm.getPNET().getDayOfMonth() == TODAY.getDayOfMonth()
-					&& shipm.getPNET().getMonth() == TODAY.getMonth())
-					|| (shipm.getPNLT().getDayOfMonth() == TODAY.getDayOfMonth()
-							&& shipm.getPNLT().getMonth() == TODAY.getMonth()))
+		static <T extends ShipmentImpl> boolean chooseFreightThatShipsToday(T shipm) {
+			return ((shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN)
+					.getDayOfMonth() == TODAY.getDayOfMonth()
+					&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN)
+							.getMonth() == TODAY.getMonth())
+					|| (shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_LATER_THAN)
+							.getDayOfMonth() == TODAY.getDayOfMonth()
+							&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_LATER_THAN)
+									.getMonth() == TODAY.getMonth()))
 					&& shipm.getStatus().ordinal() < ShipmentStatus.CONFIRMED_PU.ordinal();
 		}
 
-		static <T extends Shipment> boolean chooseFreightThatDeliversToday(T shipm) {
-			return (shipm.getDNET().getDayOfMonth() == TODAY.getDayOfMonth()
-					&& shipm.getDNET().getMonth() == TODAY.getMonth())
-					|| (shipm.getDNLT().getDayOfMonth() == TODAY.getDayOfMonth()
-							&& shipm.getDNLT().getMonth() == TODAY.getMonth());
+		static <T extends ShipmentImpl> boolean chooseFreightThatDeliversToday(T shipm) {
+			return (shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN)
+					.getDayOfMonth() == TODAY.getDayOfMonth()
+					&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN)
+							.getMonth() == TODAY.getMonth())
+					|| (shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_LATER_THAN)
+							.getDayOfMonth() == TODAY.getDayOfMonth()
+							&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_LATER_THAN)
+									.getMonth() == TODAY.getMonth());
 		}
 
-		static <T extends Shipment> void sortUrgentFreightFirstAndSameCarrierAdjacent(List<Shipment> parsedFreight) {
+		static <T extends ShipmentImpl> void sortUrgentFreightFirstAndSameCarrierAdjacent(List<ShipmentImpl> parsedFreight) {
 			Collections.sort(parsedFreight, (shipmentA, shipmentB) -> {
 				boolean sameCarrier = shipmentA.getScac().equals(shipmentB.getScac());
 				if (sameCarrier) {

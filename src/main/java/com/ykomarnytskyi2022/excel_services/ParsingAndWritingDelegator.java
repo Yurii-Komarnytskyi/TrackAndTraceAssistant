@@ -4,13 +4,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ykomarnytskyi2022.freight.Shipment;
+import com.ykomarnytskyi2022.freight.ShipmentImpl;
 
 public class ParsingAndWritingDelegator {
 
 	private ExcelWriter fileBeingWritten;
 	private List<Path> pathsToSourceExcelFiles = new ArrayList<>();
-	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
+	private List<List<ShipmentImpl>> shipmentsFromDifferentCustomers = new ArrayList<>();
 
 	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, Path... pathsToSourceExcelFiles) {
 		this(fileBeingWritten);
@@ -27,7 +27,7 @@ public class ParsingAndWritingDelegator {
 
 	}
 
-	public <T extends Shipment> void readAndWrite() {
+	public <T extends ShipmentImpl> void readAndWrite() {
 		if (gotAvailablePathsToSourceExcelFiles()) {
 			initShipmentsFromDifferentCustomers();
 			fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
@@ -43,9 +43,9 @@ public class ParsingAndWritingDelegator {
 	private void initShipmentsFromDifferentCustomers() {
 		if (shipmentsFromDifferentCustomers.size() == 0 && gotAvailablePathsToSourceExcelFiles()) {
 			pathsToSourceExcelFiles.stream().forEach(path -> {
-				List<Shipment> shipments = (new FreightExcelParser(path, LocalMachinePaths.SEARCH_RESULTS))
+				List<ShipmentImpl> shipmentImpls = (new FreightExcelParser(path, LocalMachinePaths.SEARCH_RESULTS))
 						.parseFreightDataFromFile();
-				shipmentsFromDifferentCustomers.add(shipments);
+				shipmentsFromDifferentCustomers.add(shipmentImpls);
 			});
 		}
 	}

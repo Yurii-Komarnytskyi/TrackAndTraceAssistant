@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import com.ykomarnytskyi2022.freight.Shipment;
+import com.ykomarnytskyi2022.freight.ShipmentImpl;
 
 public class FreightExcelParser implements ExcelParser {
 
@@ -38,14 +38,14 @@ public class FreightExcelParser implements ExcelParser {
 	}
 
 	@Override
-	public List<Shipment> parseFreightDataFromFile() {
+	public List<ShipmentImpl> parseFreightDataFromFile() {
 		initInputStreamAndWorkbook();
 		sheet = workbook.getSheet(sheetName);
 		headerRow = sheet.getRow(0);
 
-		List<Shipment> parsedFreightData = new ArrayList<>();
+		List<ShipmentImpl> parsedFreightData = new ArrayList<>();
 		IntStream.rangeClosed(1, this.countFilledRows()).forEach((n) -> {
-			Shipment parsedRow = parseRowHorizontally(n, this.countFilledColumns());
+			ShipmentImpl parsedRow = parseRowHorizontally(n, this.countFilledColumns());
 			parsedFreightData.add(parsedRow);
 		});
 		return parsedFreightData;
@@ -65,7 +65,7 @@ public class FreightExcelParser implements ExcelParser {
 		}
 	}
 
-	private Shipment parseRowHorizontally(int rowIndex, int columnsTotal) {
+	private ShipmentImpl parseRowHorizontally(int rowIndex, int columnsTotal) {
 		FieldsTransmitter fieldsTransmitter = new FieldsTransmitter();
 		try {
 			Row row = sheet.getRow(rowIndex);
@@ -76,7 +76,7 @@ public class FreightExcelParser implements ExcelParser {
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return new Shipment(fieldsTransmitter);
+		return new ShipmentImpl(fieldsTransmitter);
 	}
 
 	private int countFilledColumns() {
