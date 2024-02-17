@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ykomarnytskyi2022.excel_services.FieldsTransmitter;
-
 public class ShipmentImpl extends Trackable implements Shipment {
 
 	private String organizationName;
-	@SuppressWarnings("unused")
 	private String shipmentNumber;
 	private String shipmentID;
 	private ShipmentStatus status;
@@ -26,22 +23,22 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	private LocalDateTime DNET;
 	private LocalDateTime DNLT;
 
-	public ShipmentImpl(FieldsTransmitter fieldsTransmitter) {
-		Map<BasicShipmentFields, String> fields = fieldsTransmitter.getMapOfAbsorbedFields();
+	public ShipmentImpl(Map<String, String> fields) {
+		// CATCH NONE EXISTING FIELDZ !S
 		try {
-			organizationName = fields.get(BasicShipmentFields.ORGANIZATION_NAME);
-			shipmentNumber = fields.get(BasicShipmentFields.SHIPMENT_NUMBER);
-			shipmentID = fields.get(BasicShipmentFields.SHIPMENT_ID);
-			status = ShipmentStatus.fromString(fields.get(BasicShipmentFields.STATUS));
-			scac = fields.get(BasicShipmentFields.SCAC_CODE);
-			originCity = this.prettifyLocationName(fields.get(BasicShipmentFields.ORIGIN));
-			destinationCity = this.prettifyLocationName(fields.get(BasicShipmentFields.DESTINATION));
-			originState = fields.get(BasicShipmentFields.ORIGIN_STATE);
-			destinationState = fields.get(BasicShipmentFields.DESTINATION_STATE);
-			PNET = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.PNET));
-			PNLT = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.PNLT));
-			DNET = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.DNET));
-			DNLT = Trackable.convertToLocalDateTime(fields.get(BasicShipmentFields.DNLT));
+			organizationName = fields.get(ShipmentFieldsSchema.ORGANIZATION_NAME.toString());
+			shipmentNumber = fields.get(ShipmentFieldsSchema.SHIPMENT_NUMBER.toString());
+			shipmentID = fields.get(ShipmentFieldsSchema.SHIPMENT_ID.toString());
+			status = ShipmentStatus.fromString(fields.get(ShipmentFieldsSchema.STATUS.toString()));
+			scac = fields.get(ShipmentFieldsSchema.SCAC_CODE.toString());
+			originCity = this.prettifyLocationName(fields.get(ShipmentFieldsSchema.ORIGIN.toString()));
+			destinationCity = this.prettifyLocationName(fields.get(ShipmentFieldsSchema.DESTINATION.toString()));
+			originState = fields.get(ShipmentFieldsSchema.ORIGIN_STATE.toString());
+			destinationState = fields.get(ShipmentFieldsSchema.DESTINATION_STATE.toString());
+			PNET = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.PNET.toString()));
+			PNLT = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.PNLT.toString()));
+			DNET = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.DNET.toString()));
+			DNLT = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.DNLT.toString()));
 
 		} catch (NullPointerException e) {
 			System.err.println(e.getMessage());
@@ -49,41 +46,42 @@ public class ShipmentImpl extends Trackable implements Shipment {
 			System.err.println(e.getMessage());
 		}
 	}
-
-	public String getScac() {
-		return scac;
-	}
-
+	
+	@Override
 	public ShipmentStatus getStatus() {
 		return status;
 	}
 
+	@Override
+	public String getScacCode() {
+		return scac;
+	}
+
+	@Override
 	public int getNextStopNLT() {
 		LocalDateTime nextStop = (this.status.ordinal() <= 3) ? PNLT : DNLT;
 		return nextStop.getHour();
 	}
-	
-	
-	
+
 	@Override
 	public List<String> provideFieldsForExcelCells() {
-		return Arrays.asList(shipmentID, originCity + " - " + destinationCity, getSatusUpdate(),
-				status.toString(), scac);
+		return Arrays.asList(shipmentID, originCity + " - " + destinationCity, getSatusUpdate(), status.toString(),
+				scac);
 	}
-	
+
 	public String getSatusUpdate() {
 		StringBuilder body = new StringBuilder();
 		int loadStatusCode = getStatus().ordinal();
-		
-		if(loadStatusCode == 2) {
+
+		if (loadStatusCode == 2) {
 			body.append(shipperETA).append(getOriginPlaceAndState()).append("?");
 		} else if (loadStatusCode == 3) {
 			body.append(gotLoaded).append(originCity).append("?");
-		} else if (loadStatusCode == 4 ) {
+		} else if (loadStatusCode == 4) {
 			body.append(receiverETA).append(getDestinationPlaceAndState()).append("?");
 		} else if (loadStatusCode == 5) {
 			body.append(gotOffloaed).append(destinationCity).append("?");
-		}  else {
+		} else {
 			return body.append(shipperETA).append(getOriginPlaceAndState()).append("?").toString();
 		}
 		return body.insert(0, getFormalGreeting()).toString();
@@ -98,12 +96,11 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	public String getDestinationPlaceAndState() {
 		return destinationCity + ", " + destinationState;
 	}
-	
+
 	@Override
 	public Map<TimeFrameRequirements, LocalDateTime> getTimeFrameRequirements() {
-		return Map.of(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN, PNET, 
-				TimeFrameRequirements.PICKUP_NOT_LATER_THAN,PNLT,
-				TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN, DNET,
+		return Map.of(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN, PNET, TimeFrameRequirements.PICKUP_NOT_LATER_THAN,
+				PNLT, TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN, DNET,
 				TimeFrameRequirements.DELIVER_NOT_LATER_THAN, DNLT);
 	}
 
@@ -120,9 +117,8 @@ public class ShipmentImpl extends Trackable implements Shipment {
 
 	@Override
 	public String toString() {
-		return shipmentID;
+		return "ShipmentImpl [shipmentNumber=" + shipmentNumber + ", shipmentID=" + shipmentID + "]";
 	}
 
-	
 	
 }

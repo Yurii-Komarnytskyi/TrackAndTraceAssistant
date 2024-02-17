@@ -34,5 +34,10 @@ public abstract class Trackable {
 	}
 	
 	public abstract String getSatusUpdate();
+	
+	public abstract String getScacCode();
+	
+	public abstract int getNextStopNLT();
 
+	public abstract ShipmentStatus getStatus();
 }

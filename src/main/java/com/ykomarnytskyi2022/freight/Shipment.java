@@ -13,4 +13,5 @@ public interface Shipment {
 	public String getDestinationPlaceAndState();
 	
 	public Map<TimeFrameRequirements, LocalDateTime> getTimeFrameRequirements();
+
 }
