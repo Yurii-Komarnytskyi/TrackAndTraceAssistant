@@ -18,24 +18,14 @@ public enum ShipmentFieldsSchema {
 	DNET("DNET"),
 	DNLT("DNLT");
 	
-	private String feild;
+	private String columnHeader;
 	
 	private ShipmentFieldsSchema(String str) {
-		feild = str;
+		columnHeader = str;
 	}
-	
-	public static ShipmentFieldsSchema fromString(String str) throws NullPointerException {
-		if(str == null || str.trim().equals("")) throw new NullPointerException("Key argument is equal to: \"" + str + "\"");
-        for (ShipmentFieldsSchema fields : ShipmentFieldsSchema.values()) {
-            if (fields.feild.equals(str.trim().toLowerCase())) {
-                return fields;
-            }
-        }
-        return null;
-    }
 	
 	@Override
 	public String toString() {
-		return feild;
+		return columnHeader;
 	}
 }
