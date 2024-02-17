@@ -24,29 +24,35 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	private LocalDateTime DNLT;
 
 	public ShipmentImpl(Map<String, String> fields) {
-		// CATCH NONE EXISTING FIELDZ !S
 		try {
-			organizationName = fields.get(ShipmentFieldsSchema.ORGANIZATION_NAME.toString());
-			shipmentNumber = fields.get(ShipmentFieldsSchema.SHIPMENT_NUMBER.toString());
-			shipmentID = fields.get(ShipmentFieldsSchema.SHIPMENT_ID.toString());
-			status = ShipmentStatus.fromString(fields.get(ShipmentFieldsSchema.STATUS.toString()));
-			scac = fields.get(ShipmentFieldsSchema.SCAC_CODE.toString());
-			originCity = this.prettifyLocationName(fields.get(ShipmentFieldsSchema.ORIGIN.toString()));
-			destinationCity = this.prettifyLocationName(fields.get(ShipmentFieldsSchema.DESTINATION.toString()));
-			originState = fields.get(ShipmentFieldsSchema.ORIGIN_STATE.toString());
-			destinationState = fields.get(ShipmentFieldsSchema.DESTINATION_STATE.toString());
-			PNET = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.PNET.toString()));
-			PNLT = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.PNLT.toString()));
-			DNET = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.DNET.toString()));
-			DNLT = Trackable.convertToLocalDateTime(fields.get(ShipmentFieldsSchema.DNLT.toString()));
+			organizationName = fields.getOrDefault(ShipmentFieldsSchema.ORGANIZATION_NAME.toString(),
+					"no organizationName");
+			shipmentNumber = fields.getOrDefault(ShipmentFieldsSchema.SHIPMENT_NUMBER.toString(), "no shipmentNumber");
+			shipmentID = fields.getOrDefault(ShipmentFieldsSchema.SHIPMENT_ID.toString(), "no shipmentID");
+			status = ShipmentStatus
+					.fromString(fields.getOrDefault(ShipmentFieldsSchema.STATUS.toString(), "shipment planning"));
+			scac = fields.getOrDefault(ShipmentFieldsSchema.SCAC_CODE.toString(), "no scac code");
+			originCity = this
+					.prettifyLocationName(fields.getOrDefault(ShipmentFieldsSchema.ORIGIN.toString(), "no originCity"));
+			destinationCity = this.prettifyLocationName(
+					fields.getOrDefault(ShipmentFieldsSchema.DESTINATION.toString(), "no destinationCity"));
+			originState = fields.getOrDefault(ShipmentFieldsSchema.ORIGIN_STATE.toString(), "no originState");
+			destinationState = fields.getOrDefault(ShipmentFieldsSchema.DESTINATION_STATE.toString(),
+					"no destinationState");
+			PNET = Trackable.convertToLocalDateTime(
+					fields.getOrDefault(ShipmentFieldsSchema.PNET.toString(), LocalDateTime.now().toString()));
+			PNLT = Trackable.convertToLocalDateTime(
+					fields.getOrDefault(ShipmentFieldsSchema.PNLT.toString(), LocalDateTime.now().toString()));
+			DNET = Trackable.convertToLocalDateTime(
+					fields.getOrDefault(ShipmentFieldsSchema.DNET.toString(), LocalDateTime.now().toString()));
+			DNLT = Trackable.convertToLocalDateTime(
+					fields.getOrDefault(ShipmentFieldsSchema.DNLT.toString(), LocalDateTime.now().toString()));
 
-		} catch (NullPointerException e) {
-			System.err.println(e.getMessage());
 		} catch (DateTimeParseException e) {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
 	@Override
 	public ShipmentStatus getStatus() {
 		return status;
@@ -120,5 +126,4 @@ public class ShipmentImpl extends Trackable implements Shipment {
 		return "ShipmentImpl [shipmentNumber=" + shipmentNumber + ", shipmentID=" + shipmentID + "]";
 	}
 
-	
 }
