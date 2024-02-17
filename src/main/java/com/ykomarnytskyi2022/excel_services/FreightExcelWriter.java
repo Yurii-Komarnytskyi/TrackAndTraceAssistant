@@ -19,9 +19,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import com.ykomarnytskyi2022.freight.ShipmentImpl;
+import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 import com.ykomarnytskyi2022.freight.TimeFrameRequirements;
+import com.ykomarnytskyi2022.freight.Trackable;
 
 class FreightExcelWriter implements ExcelWriter {
 
@@ -41,26 +42,26 @@ class FreightExcelWriter implements ExcelWriter {
 	}
 
 	@Override
-	public <T extends ShipmentImpl> void writePickupsAndDeliveriesOnSeparateSheets(
-			List<List<ShipmentImpl>> shipmentsFromDifferentCustomers) {
+	public <T extends Shipment> void writePickupsAndDeliveriesOnSeparateSheets(
+			List<List<Shipment>> ShipmentsFromDifferentCustomers) {
 		ProgressOfSheetPopulation progressOfSheetPopulationPU = new ProgressOfSheetPopulation("Shipping");
 		ProgressOfSheetPopulation progressOfSheetPopulationDEL = new ProgressOfSheetPopulation("Delivering");
 
-		writeToExcelFromMultFiles(shipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatShipsToday,
+		writeToExcelFromMultFiles(ShipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatShipsToday,
 				progressOfSheetPopulationPU);
-		writeToExcelFromMultFiles(shipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatDeliversToday,
+		writeToExcelFromMultFiles(ShipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatDeliversToday,
 				progressOfSheetPopulationDEL);
 	}
 
-	private <T extends ShipmentImpl> void writeToExcelFromMultFiles(List<List<ShipmentImpl>> shipmentsFromDifferentCustomers,
+	private <T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> ShipmentsFromDifferentCustomers,
 			Predicate<T> tester, ProgressOfSheetPopulation progressOfSheetPopulation) {
-		shipmentsFromDifferentCustomers.stream().forEach(shipment -> {
-			this.writeToExcel(selectFreightComplyingWithPredicate(shipment, tester), progressOfSheetPopulation);
+		ShipmentsFromDifferentCustomers.stream().forEach(Shipment -> {
+			this.writeToExcel(selectFreightComplyingWithPredicate(Shipment, tester), progressOfSheetPopulation);
 		});
 	}
 
 	@Override
-	public <T extends ShipmentImpl> void writeToExcel(List<ShipmentImpl> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+	public <T extends Shipment> void writeToExcel(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		SortingStrategies.sortUrgentFreightFirstAndSameCarrierAdjacent(parsedFreight);
 
 		try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
@@ -80,7 +81,7 @@ class FreightExcelWriter implements ExcelWriter {
 
 	}
 
-	private void populateRowsWithParsedFreight(List<ShipmentImpl> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
+	private void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		Sheet sheet = (workbook.getSheet(sheetInfo.getSheetName()) != null)
 				? workbook.getSheet(sheetInfo.getSheetName())
 				: workbook.createSheet(sheetInfo.getSheetName());
@@ -90,15 +91,15 @@ class FreightExcelWriter implements ExcelWriter {
 				.forEach(n -> {
 					sheet.createRow(n);
 					Row currentRow = sheet.getRow(n);
-					List<String> shipmentFields = parsedFreight.get(sheetInfo.getWriteIntoRow())
+					List<String> ShipmentFields = parsedFreight.get(sheetInfo.getWriteIntoRow())
 							.provideFieldsForExcelCells();
 					sheetInfo.incrementWriteIntoRowByOne();
 
 					// Runs through CELLS
-					IntStream.range(0, shipmentFields.size()).forEach(i -> {
+					IntStream.range(0, ShipmentFields.size()).forEach(i -> {
 						currentRow.createCell(i);
 						Cell currentCell = currentRow.getCell(i);
-						currentCell.setCellValue(shipmentFields.get(i));
+						currentCell.setCellValue(ShipmentFields.get(i));
 					});
 				});
 	}
@@ -123,14 +124,14 @@ class FreightExcelWriter implements ExcelWriter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T extends ShipmentImpl> List<ShipmentImpl> selectFreightComplyingWithPredicate(List<ShipmentImpl> parsedFreight,
+	private static <T extends Shipment> List<Shipment> selectFreightComplyingWithPredicate(List<Shipment> parsedFreight,
 			Predicate<T> predicate) {
-		return parsedFreight.stream().filter(shipment -> predicate.test((T) shipment)).collect(Collectors.toList());
+		return parsedFreight.stream().filter(Shipment -> predicate.test((T) Shipment)).collect(Collectors.toList());
 	}
 
 	static class SortingStrategies {
 
-		static <T extends ShipmentImpl> boolean chooseShipmentsRelevantToday(T shipm) {
+		static <T extends Shipment> boolean chooseShipmentsRelevantToday(T shipm) {
 			return (shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_LATER_THAN)
 					.getDayOfMonth() == TODAY.getDayOfMonth()
 					&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_LATER_THAN)
@@ -141,7 +142,7 @@ class FreightExcelWriter implements ExcelWriter {
 									.getMonth() == TODAY.getMonth());
 		}
 
-		static <T extends ShipmentImpl> boolean chooseFreightThatShipsToday(T shipm) {
+		static <T extends Shipment> boolean chooseFreightThatShipsToday(T shipm) {
 			return ((shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN)
 					.getDayOfMonth() == TODAY.getDayOfMonth()
 					&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN)
@@ -150,10 +151,10 @@ class FreightExcelWriter implements ExcelWriter {
 							.getDayOfMonth() == TODAY.getDayOfMonth()
 							&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.PICKUP_NOT_LATER_THAN)
 									.getMonth() == TODAY.getMonth()))
-					&& shipm.getStatus().ordinal() < ShipmentStatus.CONFIRMED_PU.ordinal();
+					&& ((Trackable)shipm).getStatus().ordinal() < ShipmentStatus.CONFIRMED_PU.ordinal();
 		}
 
-		static <T extends ShipmentImpl> boolean chooseFreightThatDeliversToday(T shipm) {
+		static <T extends Shipment> boolean chooseFreightThatDeliversToday(T shipm) {
 			return (shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN)
 					.getDayOfMonth() == TODAY.getDayOfMonth()
 					&& shipm.getTimeFrameRequirements().get(TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN)
@@ -164,13 +165,13 @@ class FreightExcelWriter implements ExcelWriter {
 									.getMonth() == TODAY.getMonth());
 		}
 
-		static <T extends ShipmentImpl> void sortUrgentFreightFirstAndSameCarrierAdjacent(List<ShipmentImpl> parsedFreight) {
-			Collections.sort(parsedFreight, (shipmentA, shipmentB) -> {
-				boolean sameCarrier = shipmentA.getScac().equals(shipmentB.getScac());
+		static <T extends Shipment> void sortUrgentFreightFirstAndSameCarrierAdjacent(List<Shipment> parsedFreight) {
+			Collections.sort(parsedFreight, (ShipmentA, ShipmentB) -> {
+				boolean sameCarrier = ((Trackable)ShipmentA).getScacCode().equals(((Trackable) ShipmentB).getScacCode());
 				if (sameCarrier) {
 					return 0;
 				}
-				return shipmentA.getNextStopNLT() - shipmentB.getNextStopNLT();
+				return ((Trackable)ShipmentA).getNextStopNLT() - ((Trackable)ShipmentB).getNextStopNLT();
 			});
 		}
 

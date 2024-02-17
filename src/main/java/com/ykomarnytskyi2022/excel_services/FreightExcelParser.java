@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -16,6 +18,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.freight.ShipmentImpl;
 
 public class FreightExcelParser implements ExcelParser {
@@ -38,14 +41,14 @@ public class FreightExcelParser implements ExcelParser {
 	}
 
 	@Override
-	public List<ShipmentImpl> parseFreightDataFromFile() {
+	public List<Shipment> parseFreightDataFromFile() {
 		initInputStreamAndWorkbook();
 		sheet = workbook.getSheet(sheetName);
 		headerRow = sheet.getRow(0);
 
-		List<ShipmentImpl> parsedFreightData = new ArrayList<>();
+		List<Shipment> parsedFreightData = new ArrayList<>();
 		IntStream.rangeClosed(1, this.countFilledRows()).forEach((n) -> {
-			ShipmentImpl parsedRow = parseRowHorizontally(n, this.countFilledColumns());
+			Shipment parsedRow = parseRowHorizontally(n, this.countFilledColumns());
 			parsedFreightData.add(parsedRow);
 		});
 		return parsedFreightData;
@@ -65,20 +68,21 @@ public class FreightExcelParser implements ExcelParser {
 		}
 	}
 
-	private ShipmentImpl parseRowHorizontally(int rowIndex, int columnsTotal) {
-		FieldsTransmitter fieldsTransmitter = new FieldsTransmitter();
+
+	private Shipment parseRowHorizontally(int rowIndex, int columnsTotal) {
+		Map<String, String> fields = new HashMap<>();
 		try {
 			Row row = sheet.getRow(rowIndex);
 			IntStream.range(0, columnsTotal).forEach((n) -> {
 				Cell cell = row.getCell(n);
-				fieldsTransmitter.absorb(headerRow.getCell(n).getStringCellValue(), cell.getStringCellValue());
+				fields.put(headerRow.getCell(n).getStringCellValue(), cell.getStringCellValue());
 			});
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return new ShipmentImpl(fieldsTransmitter);
+		return new ShipmentImpl(fields);
 	}
-
+	
 	private int countFilledColumns() {
 		return sheet.getRow(0).getLastCellNum();
 	}
