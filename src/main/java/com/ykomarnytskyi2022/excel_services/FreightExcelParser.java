@@ -19,7 +19,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.ykomarnytskyi2022.freight.Shipment;
-import com.ykomarnytskyi2022.freight.ShipmentImpl;
+import com.ykomarnytskyi2022.freight.ShipmentFactory;
 
 public class FreightExcelParser implements ExcelParser {
 
@@ -30,10 +30,12 @@ public class FreightExcelParser implements ExcelParser {
 	private String sheetName;
 	private Sheet sheet;
 	private Row headerRow;
+	private ShipmentFactory shipmentFactory;
 
-	public FreightExcelParser(Path path, String sheetName) {
+	public FreightExcelParser(Path path, String sheetName, ShipmentFactory shipmentFactory) {
 		this.path = path;
 		this.sheetName = sheetName;
+		this.shipmentFactory = shipmentFactory;
 	}
 
 	public FreightExcelParser() {
@@ -80,7 +82,7 @@ public class FreightExcelParser implements ExcelParser {
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return new ShipmentImpl(fields);
+		return shipmentFactory.create(fields);
 	}
 	
 	private int countFilledColumns() {
