@@ -53,6 +53,9 @@ public class ShipmentImpl extends Trackable implements Shipment {
 		}
 	}
 
+	public ShipmentImpl() {
+	}
+
 	@Override
 	public ShipmentStatus getStatus() {
 		return status;
