@@ -1,4 +1,3 @@
-src/main/resources/*
 target/*
 bin/*
 build/*
@@ -15,4 +14,5 @@ build/*
 .vscode
 _site/
 *.css
-!petclinic.css
+*.xls
+*.pdf
