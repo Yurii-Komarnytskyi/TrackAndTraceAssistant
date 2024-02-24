@@ -94,5 +94,10 @@
 			<version>5.1.0</version>
 		</dependency>
 	</dependencies>
+	
+	<scm>
+		<developerConnection>scm:git:https://github.com/Yurii-Komarnytskyi/TrackAndTraceAssistant.git</developerConnection>
+	  <tag>HEAD</tag>
+  </scm>
 
 </project>
