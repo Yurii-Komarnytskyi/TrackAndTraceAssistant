@@ -18,12 +18,17 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 import com.ykomarnytskyi2022.freight.TimeFrameRequirements;
 import com.ykomarnytskyi2022.freight.Trackable;
 
+@Service
+@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 class FreightExcelWriter implements ExcelWriter {
 
 	@SuppressWarnings("unused")

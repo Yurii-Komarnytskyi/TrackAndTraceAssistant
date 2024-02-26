@@ -4,47 +4,47 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ykomarnytskyi2022.freight.Shipment;
-import com.ykomarnytskyi2022.freight.ShipmentImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
+import com.ykomarnytskyi2022.freight.Shipment;
+
+@Service
+@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ParsingAndWritingDelegator {
 
-	private ExcelWriter fileBeingWritten;
+	private ExcelWriter excelWriter;
 	private List<Path> pathsToSourceExcelFiles = new ArrayList<>();
 	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
+	private ExcelParserFactory excelParserFactory;
 
-	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, Path... pathsToSourceExcelFiles) {
-		this(fileBeingWritten);
-		for (Path path : pathsToSourceExcelFiles) {
-			this.pathsToSourceExcelFiles.add(path);
-		}
+	@Autowired
+	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, ExcelParserFactory excelParserFactory) {
+		this.excelWriter = fileBeingWritten;
+		this.excelParserFactory = excelParserFactory;
 	}
-
-	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten) {
-		this.fileBeingWritten = fileBeingWritten;
-	}
-
+	
 	public ParsingAndWritingDelegator() {
 
 	}
 
-	public <T extends ShipmentImpl> void readAndWrite() {
+	public void readAndWrite() {
 		if (gotAvailablePathsToSourceExcelFiles()) {
 			initShipmentsFromDifferentCustomers();
-			fileBeingWritten.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
+			excelWriter.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
 		} else {
 			System.err.println("No paths to source excel files were provided");
 		}
 	}
 
-	public boolean offerPathToSourceExcelFile(Path path) {
-		return pathsToSourceExcelFiles.add(path);
-	}
 	
 	private void initShipmentsFromDifferentCustomers() {
-		if (shipmentsFromDifferentCustomers.size() == 0 && gotAvailablePathsToSourceExcelFiles()) {
+		if (gotAvailablePathsToSourceExcelFiles()) {
 			pathsToSourceExcelFiles.stream().forEach(path -> {
-				List<Shipment> shipmentImpls = (new FreightExcelParser(path, LocalMachinePaths.SEARCH_RESULTS))
+				List<Shipment> shipmentImpls = excelParserFactory
+						.create(path, LocalMachinePaths.SEARCH_RESULTS)
 						.parseFreightDataFromFile();
 				shipmentsFromDifferentCustomers.add(shipmentImpls);
 			});
@@ -55,4 +55,8 @@ public class ParsingAndWritingDelegator {
 		return this.pathsToSourceExcelFiles.size() > 0;
 	}
 
+	public boolean offerPathToSourceExcelFile(Path path) {
+		return pathsToSourceExcelFiles.add(path);
+	}
+	
 }

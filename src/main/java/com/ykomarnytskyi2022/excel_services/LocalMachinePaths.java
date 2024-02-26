@@ -11,6 +11,8 @@ abstract class LocalMachinePaths {
 	static Path customerM = Paths
 			.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\M.xls");
 
+	static Path customerP = Paths
+			.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\P.xls");
 	static final String SHEET_NAME = "Sheet1";
 	static Path blankExelFile = Paths.get(
 			"C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\FreightDemo.xls");
