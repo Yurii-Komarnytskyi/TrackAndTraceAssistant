@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication(scanBasePackages = {"com.ykomarnytskyi2022.excel_services" , "com.ykomarnytskyi2022.freight"})
+@SpringBootApplication(scanBasePackages = {"com.ykomarnytskyi2022.config"})
 public class ApplicationStarter {
 	
 
@@ -14,12 +14,7 @@ public class ApplicationStarter {
 		
 		ApplicationContext context = SpringApplication.run(ApplicationStarter.class, args);
 		
-		ExcelParserFactory excelParserFactory = context.getBean(ExcelParserFactoryImpl.class); 
-		
-		ExcelWriter excelWriter = context.getBean(FreightExcelWriter.class, LocalMachinePaths.blankExelFile); 
-		
-		ParsingAndWritingDelegator delegator = context.getBean(ParsingAndWritingDelegator.class,
-				excelWriter, excelParserFactory);
+		ParsingAndWritingDelegator delegator = context.getBean(ParsingAndWritingDelegator.class, LocalMachinePaths.blankExelFile);
 		
 		delegator.offerPathToSourceExcelFile(LocalMachinePaths.customerC);
 		delegator.offerPathToSourceExcelFile(LocalMachinePaths.customerM);
