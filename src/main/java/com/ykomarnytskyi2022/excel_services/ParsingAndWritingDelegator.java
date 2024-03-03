@@ -4,15 +4,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.ykomarnytskyi2022.freight.Shipment;
 
-@Service
-@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ParsingAndWritingDelegator {
 
 	private ExcelWriter excelWriter;
@@ -20,7 +13,6 @@ public class ParsingAndWritingDelegator {
 	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
 	private ExcelParserFactory excelParserFactory;
 
-	@Autowired
 	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, ExcelParserFactory excelParserFactory) {
 		this.excelWriter = fileBeingWritten;
 		this.excelParserFactory = excelParserFactory;
