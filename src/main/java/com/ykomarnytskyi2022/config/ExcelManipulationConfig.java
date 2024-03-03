@@ -2,8 +2,10 @@ package com.ykomarnytskyi2022.config;
 
 import java.nio.file.Path;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
 import com.ykomarnytskyi2022.excel_services.ExcelParserFactory;
@@ -18,25 +20,27 @@ import com.ykomarnytskyi2022.freight.ShipmentFactoryImpl;
 public class ExcelManipulationConfig {
 
 	@Bean
-	@Scope(scopeName = "prototype")
+	@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public ParsingAndWritingDelegator parsingAndWritingDelegator(Path excelFileBeingWritten) {
 		return new ParsingAndWritingDelegator(excelWriter(excelFileBeingWritten), excelParserFactory());
 	}
-		
+
 	@Bean
-	@Scope(scopeName = "prototype")
+	@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public ExcelWriter excelWriter(Path path) {
 		return new FreightExcelWriter(path);
 	}
-	
+
+	@Profile({ "nocTeam", "default" })
 	@Bean
 	ExcelParserFactory excelParserFactory() {
 		return new ExcelParserFactoryImpl(shipmentFactory());
 	}
 
+	@Profile({ "nocTeam", "default" })
 	@Bean
 	ShipmentFactory shipmentFactory() {
 		return new ShipmentFactoryImpl();
 	}
-	
+
 }
