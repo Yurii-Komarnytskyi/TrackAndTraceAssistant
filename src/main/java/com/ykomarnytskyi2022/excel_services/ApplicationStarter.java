@@ -9,20 +9,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class ApplicationStarter {
 	
 
-	
+		
 	public static void main(String[] args) {
 		
 		ApplicationContext context = SpringApplication.run(ApplicationStarter.class, args);
 		
-		ParsingAndWritingDelegator delegator = context.getBean(ParsingAndWritingDelegator.class, LocalMachinePaths.blankExelFile);
+		ParsingAndWritingDelegator delegator = context.getBean(ParsingAndWritingDelegator.class);
 		
-		delegator.offerPathToSourceExcelFile(LocalMachinePaths.customerC);
-		delegator.offerPathToSourceExcelFile(LocalMachinePaths.customerM);
-		delegator.offerPathToSourceExcelFile(LocalMachinePaths.customerS);
-		delegator.offerPathToSourceExcelFile(LocalMachinePaths.customerP);
 		delegator.readAndWrite();
 		((ConfigurableApplicationContext) context).close();
-		
+			
 		System.out.println("THE END");
 	}
 

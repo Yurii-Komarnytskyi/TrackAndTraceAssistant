@@ -2,21 +2,34 @@ package com.ykomarnytskyi2022.excel_services;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-abstract class LocalMachinePaths {
-	static Path customerC = Paths
-			.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\C.xls");
-	static Path customerS = Paths
-			.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\S.xls");
-	static Path customerM = Paths
-			.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\M.xls");
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-	static Path customerP = Paths
-			.get("C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\P.xls");
-	static final String SHEET_NAME = "Sheet1";
-	static Path blankExelFile = Paths.get(
-			"C:\\Users\\LEMMY\\Desktop\\eclipse-workspace\\TrackAndTraceAssistant\\src\\main\\resources\\FreightDemo.xls");
+@ConfigurationProperties("path-to")
+public class LocalMachinePaths {
 
-	static final String DEFAULT_SHEET_NAME = "Sheet1";
-	static final String SEARCH_RESULTS = "Search Results";
+	private final Path blankFile;
+	
+	private final List<Path> pathsToSourceExcelFiles = new ArrayList<>();
+	
+	public LocalMachinePaths(@Value("${path-to.customerC}") String customerC, @Value("${path-to.customerM}") String customerM,
+			@Value("${path-to.customerS}") String customerS, @Value("${path-to.customerP}") String customerP,
+			@Value("${path-to.blankFile}") String blankFile) {
+		pathsToSourceExcelFiles.addAll(
+				List.of(customerC, customerM, customerS, customerP).stream().map(str -> Paths.get(str)).toList());
+		this.blankFile = Paths.get(blankFile);
+	}
+	
+	public Collection<Path> getPathsToSourceExcelFiles() {
+		return pathsToSourceExcelFiles;
+	}
+
+	public Path getBlankFile() {
+		return blankFile;
+	}
+
 }

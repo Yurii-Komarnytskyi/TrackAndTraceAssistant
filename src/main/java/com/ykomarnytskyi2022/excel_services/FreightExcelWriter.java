@@ -27,7 +27,7 @@ import com.ykomarnytskyi2022.freight.Trackable;
 public class FreightExcelWriter implements ExcelWriter {
 
 	@SuppressWarnings("unused")
-	private String sheetName = LocalMachinePaths.DEFAULT_SHEET_NAME;
+	private String sheetName;
 	private Workbook workbook;
 	private Path path;
 	private static final LocalDateTime TODAY = LocalDateTime.now();

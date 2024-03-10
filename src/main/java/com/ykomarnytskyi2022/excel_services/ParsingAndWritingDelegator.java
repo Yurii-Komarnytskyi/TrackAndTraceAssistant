@@ -13,9 +13,11 @@ public class ParsingAndWritingDelegator {
 	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
 	private ExcelParserFactory excelParserFactory;
 
-	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, ExcelParserFactory excelParserFactory) {
-		this.excelWriter = fileBeingWritten;
+	public ParsingAndWritingDelegator(ExcelWriter excelWriter, ExcelParserFactory excelParserFactory,
+			LocalMachinePaths localMachinePaths) {
+		this.excelWriter = excelWriter;
 		this.excelParserFactory = excelParserFactory;
+		pathsToSourceExcelFiles.addAll(localMachinePaths.getPathsToSourceExcelFiles().stream().distinct().toList());
 	}
 	
 	public ParsingAndWritingDelegator() {
@@ -36,7 +38,7 @@ public class ParsingAndWritingDelegator {
 		if (gotAvailablePathsToSourceExcelFiles()) {
 			pathsToSourceExcelFiles.stream().forEach(path -> {
 				List<Shipment> shipmentImpls = excelParserFactory
-						.create(path, LocalMachinePaths.SEARCH_RESULTS)
+						.create(path, "Search Results")
 						.parseFreightDataFromFile();
 				shipmentsFromDifferentCustomers.add(shipmentImpls);
 			});
