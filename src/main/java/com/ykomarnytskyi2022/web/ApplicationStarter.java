@@ -1,11 +1,13 @@
-package com.ykomarnytskyi2022.excel_services;
+package com.ykomarnytskyi2022.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication(scanBasePackages = {"com.ykomarnytskyi2022.config"})
+import com.ykomarnytskyi2022.excel_services.ParsingAndWritingDelegator;
+
+@SpringBootApplication(scanBasePackages = {"com.ykomarnytskyi2022.config" , "com.ykomarnytskyi2022.web.bootstrap"})
 public class ApplicationStarter {
 	
 
@@ -14,12 +16,8 @@ public class ApplicationStarter {
 		
 		ApplicationContext context = SpringApplication.run(ApplicationStarter.class, args);
 		
-		ParsingAndWritingDelegator delegator = context.getBean(ParsingAndWritingDelegator.class);
-		
-		delegator.readAndWrite();
-		((ConfigurableApplicationContext) context).close();
+//		((ConfigurableApplicationContext) context).close();
 			
-		System.out.println("THE END");
 	}
 
 }
