@@ -6,21 +6,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-@ConfigurationProperties("path-to")
+//@ConfigurationProperties("paths")
 public class LocalMachinePaths {
 
 	private final Path blankFile;
 	
 	private final List<Path> pathsToSourceExcelFiles = new ArrayList<>();
 	
-	public LocalMachinePaths(@Value("${path-to.customerC}") String customerC, @Value("${path-to.customerM}") String customerM,
-			@Value("${path-to.customerS}") String customerS, @Value("${path-to.customerP}") String customerP,
-			@Value("${path-to.blankFile}") String blankFile) {
-		pathsToSourceExcelFiles.addAll(
-				List.of(customerC, customerM, customerS, customerP).stream().map(str -> Paths.get(str)).toList());
+	public LocalMachinePaths(List<String> paths, String blankFile) {
+		this.pathsToSourceExcelFiles.addAll(paths.stream().map(str -> Paths.get(str)).toList());
 		this.blankFile = Paths.get(blankFile);
 	}
 	

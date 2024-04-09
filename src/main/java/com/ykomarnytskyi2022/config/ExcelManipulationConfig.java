@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -21,14 +20,13 @@ import com.ykomarnytskyi2022.freight.ShipmentFactory;
 import com.ykomarnytskyi2022.freight.ShipmentFactoryImpl;
 
 @Configuration
-@EnableConfigurationProperties(LocalMachinePaths.class)
 public class ExcelManipulationConfig {
 
 	@Bean
 	@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public ParsingAndWritingDelegator parsingAndWritingDelegator(LocalMachinePaths localMachinePaths,
 			@Value(value = "${sheet-names}") List<String> sheetNames) {
-		
+
 		return new ParsingAndWritingDelegator(excelWriter(localMachinePaths.getBlankFile(), sheetNames),
 				excelParserFactory(), localMachinePaths);
 	}
@@ -51,4 +49,9 @@ public class ExcelManipulationConfig {
 		return new ShipmentFactoryImpl();
 	}
 
+	@Bean
+	public LocalMachinePaths localMachinePaths(@Value(value = "${source-excel-files}") List<String> paths,
+			@Value(value = "${path-to.blankFile}") String blankFile) {
+		return new LocalMachinePaths(paths, blankFile);
+	}
 }

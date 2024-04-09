@@ -3,7 +3,6 @@ package com.ykomarnytskyi2022.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(scanBasePackages = {"com.ykomarnytskyi2022.config" , "com.ykomarnytskyi2022.web.bootstrap"})
 public class ApplicationStarter {
