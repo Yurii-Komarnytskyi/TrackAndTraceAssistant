@@ -18,8 +18,7 @@ public class ShipmentsLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		delegator.readAndWrite();
-		delegator.readAndWrite();
+		delegator.readAndWrite(); 
 	}
 
 }
