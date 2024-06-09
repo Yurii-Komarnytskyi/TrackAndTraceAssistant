@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-//@ConfigurationProperties("paths")
 public class LocalMachinePaths {
 
 	private final Path blankFile;
