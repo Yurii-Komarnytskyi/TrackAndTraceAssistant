@@ -9,27 +9,27 @@ class ProgressOfSheetPopulation {
 		this.sheetName = sheetName;
 	}
 
-	int getLatestWrittenRow() {
+	protected int getLatestWrittenRow() {
 		return latestWrittenRow;
 	}
 
-	void setLatestWrittenRow(int latestWrittenRow) {
+	protected void setLatestWrittenRow(int latestWrittenRow) {
 		this.latestWrittenRow += latestWrittenRow;
 	}
 
-	String getSheetName() {
+	protected String getSheetName() {
 		return sheetName;
 	}
 
-	int getWriteIntoRow() {
+	protected int getWriteIntoRow() {
 		return writeIntoRow;
 	}
 
-	void resetWriteIntoRowToZero() {
+	protected void resetWriteIntoRowToZero() {
 		writeIntoRow = 0;
 	}
 
-	public void incrementWriteIntoRowByOne() {
+	protected void incrementWriteIntoRowByOne() {
 		writeIntoRow++;
 	}
 

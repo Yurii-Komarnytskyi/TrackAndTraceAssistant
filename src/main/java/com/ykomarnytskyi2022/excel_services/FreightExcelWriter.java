@@ -28,35 +28,16 @@ import com.ykomarnytskyi2022.freight.Trackable;
 
 public class FreightExcelWriter implements ExcelWriter {
 
+	private static final LocalDateTime TODAY = LocalDateTime.now();
 	private Workbook workbook;
 	private final Path path;
 	private final List<String> sheetNames;
-	private static final LocalDateTime TODAY = LocalDateTime.now();
 
 	@Autowired
 	public FreightExcelWriter(Path path, List<String> sheetNames) {
 		this.path = path;
 		this.sheetNames = sheetNames;
 		cleanUpTheSheetsInAnExcelFile();
-	}
-
-	@Override
-	public <T extends Shipment> void writePickupsAndDeliveriesOnSeparateSheets(
-			List<List<Shipment>> ShipmentsFromDifferentCustomers) {
-		ProgressOfSheetPopulation progressOfSheetPopulationPU = new ProgressOfSheetPopulation("Shipping");
-		ProgressOfSheetPopulation progressOfSheetPopulationDEL = new ProgressOfSheetPopulation("Delivering");
-
-		writeToExcelFromMultFiles(ShipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatShipsToday,
-				progressOfSheetPopulationPU);
-		writeToExcelFromMultFiles(ShipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatDeliversToday,
-				progressOfSheetPopulationDEL);
-	}
-
-	private <T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> ShipmentsFromDifferentCustomers,
-			Predicate<T> tester, ProgressOfSheetPopulation progressOfSheetPopulation) {
-		ShipmentsFromDifferentCustomers.stream().forEach(Shipment -> {
-			this.writeToExcel(selectFreightComplyingWithPredicate(Shipment, tester), progressOfSheetPopulation);
-		});
 	}
 
 	@Override
@@ -77,8 +58,28 @@ public class FreightExcelWriter implements ExcelWriter {
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		}
-
 	}
+	
+	@Override
+	public <T extends Shipment> void writePickupsAndDeliveriesOnSeparateSheets(
+			List<List<Shipment>> ShipmentsFromDifferentCustomers) {
+		ProgressOfSheetPopulation progressOfSheetPopulationPU = new ProgressOfSheetPopulation("Shipping");
+		ProgressOfSheetPopulation progressOfSheetPopulationDEL = new ProgressOfSheetPopulation("Delivering");
+
+		writeToExcelFromMultFiles(ShipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatShipsToday,
+				progressOfSheetPopulationPU);
+		writeToExcelFromMultFiles(ShipmentsFromDifferentCustomers, SortingStrategies::chooseFreightThatDeliversToday,
+				progressOfSheetPopulationDEL);
+	}
+
+	private <T extends Shipment> void writeToExcelFromMultFiles(List<List<Shipment>> ShipmentsFromDifferentCustomers,
+			Predicate<T> tester, ProgressOfSheetPopulation progressOfSheetPopulation) {
+		ShipmentsFromDifferentCustomers.stream().forEach(Shipment -> {
+			this.writeToExcel(selectFreightComplyingWithPredicate(Shipment, tester), progressOfSheetPopulation);
+		});
+	}
+
+
 
 	private void populateRowsWithParsedFreight(List<Shipment> parsedFreight, ProgressOfSheetPopulation sheetInfo) {
 		Sheet sheet = (workbook.getSheet(sheetInfo.getSheetName()) != null)
@@ -180,8 +181,4 @@ public class FreightExcelWriter implements ExcelWriter {
 		}
 
 	}
-
-
-
-
 }
