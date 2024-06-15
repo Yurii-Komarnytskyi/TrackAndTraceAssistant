@@ -1,4 +1,4 @@
-package com.ykomarnytskyi2022.excel_services;
+package com.ykomarnytskyi2022.services.excel;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -53,7 +53,8 @@ public class ExcelOperationsImpl implements ExcelOperations {
 		return this.pathsToSourceExcelFiles.size() > 0;
 	}
 
-	
-
-	
+	@Override
+	public List<List<Shipment>> expose() {
+		return shipmentsFromDifferentCustomers;
+	}
 }
