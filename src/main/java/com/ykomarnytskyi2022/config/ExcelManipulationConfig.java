@@ -10,15 +10,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
-import com.ykomarnytskyi2022.excel_services.ExcelOperations;
-import com.ykomarnytskyi2022.excel_services.ExcelOperationsImpl;
-import com.ykomarnytskyi2022.excel_services.ExcelParserFactory;
-import com.ykomarnytskyi2022.excel_services.ExcelParserFactoryImpl;
-import com.ykomarnytskyi2022.excel_services.ExcelWriter;
-import com.ykomarnytskyi2022.excel_services.FreightExcelWriter;
-import com.ykomarnytskyi2022.excel_services.LocalMachinePaths;
 import com.ykomarnytskyi2022.freight.ShipmentFactory;
 import com.ykomarnytskyi2022.freight.ShipmentFactoryImpl;
+import com.ykomarnytskyi2022.services.excel.ExcelOperations;
+import com.ykomarnytskyi2022.services.excel.ExcelOperationsImpl;
+import com.ykomarnytskyi2022.services.excel.ExcelParserFactory;
+import com.ykomarnytskyi2022.services.excel.ExcelParserFactoryImpl;
+import com.ykomarnytskyi2022.services.excel.ExcelWriter;
+import com.ykomarnytskyi2022.services.excel.FreightExcelWriter;
+import com.ykomarnytskyi2022.services.excel.LocalMachinePaths;
 
 @Configuration
 public class ExcelManipulationConfig {
