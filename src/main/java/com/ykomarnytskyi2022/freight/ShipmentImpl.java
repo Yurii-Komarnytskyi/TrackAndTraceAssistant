@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class ShipmentImpl extends Trackable implements Shipment {
 
 	private String organizationName;

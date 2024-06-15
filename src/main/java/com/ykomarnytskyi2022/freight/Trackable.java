@@ -5,13 +5,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class Trackable {
+import com.ykomarnytskyi2022.domain.BaseEntity;
+
+import jakarta.persistence.Entity;
+
+@Entity
+public abstract class Trackable extends BaseEntity {
 
 	static String shipperETA = "Could you advise on an ETA to the shipper in ";
 	static String gotLoaded = "Could you advise if this load has been picked up in ";
 	static String receiverETA = "Could you advise on an ETA to the receiver in ";
 	static String gotOffloaed = "Could you advise if this load has been delivered in ";
-
+	
 	static LocalDateTime convertToLocalDateTime(String str) {
 		DateTimeFormatter formattedStr = DateTimeFormatter
 				.ofPattern(String.format("MM/dd/uu HH:mm '%s'", str.substring(str.length() - 2)));
