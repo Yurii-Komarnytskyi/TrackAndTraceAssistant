@@ -1,19 +1,12 @@
-package com.ykomarnytskyi2022.web;
+package com.ykomarnytskyi2022;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication(scanBasePackages = {"com.ykomarnytskyi2022.config" , "com.ykomarnytskyi2022.web.bootstrap"})
-public class ApplicationStarter {
-	
-
-		
+@SpringBootApplication
+public class TrackAndTraceApplication {
 	public static void main(String[] args) {
-		
-		ApplicationContext context = SpringApplication.run(ApplicationStarter.class, args);
-			
+		ApplicationContext context = SpringApplication.run(TrackAndTraceApplication.class, args);
 	}
-
 }
-
