@@ -12,19 +12,8 @@ import jakarta.persistence.Entity;
 @Entity
 public class ShipmentImpl extends Trackable implements Shipment {
 
-	private String organizationName;
-	private String shipmentNumber;
-	private String shipmentID;
-	private ShipmentStatus status;
+	private String shipmentID; 
 	private String scac;
-	private String originCity;
-	private String destinationCity;
-	private String originState;
-	private String destinationState;
-	private LocalDateTime PNET;
-	private LocalDateTime PNLT;
-	private LocalDateTime DNET;
-	private LocalDateTime DNLT;
 
 	public ShipmentImpl(Map<String, String> fields) {
 		try {
