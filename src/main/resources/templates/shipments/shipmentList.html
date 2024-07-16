@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Welcome Page</title>
+</head>
+
+<body>  
+
+    <h3>Shipment List</h3>
+    <ul th:each="shipment : ${shipments}">
+        <li th:text="${shipment.shipmentID} + ' ' + ${shipment.scac} + ' ' + ${shipment.originCity} + ' to ' + ${shipment.destinationCity} "></li>
+    </ul>
+
+</body>
+</html>

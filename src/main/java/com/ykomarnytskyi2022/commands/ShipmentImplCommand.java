@@ -1,3 +1,4 @@
+
 package com.ykomarnytskyi2022.commands;
 
 import java.time.LocalDateTime;
@@ -33,46 +34,6 @@ public class ShipmentImplCommand {
 		PNLT = map.get(TimeFrameRequirements.PICKUP_NOT_LATER_THAN);
 		DNET = map.get(TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN);
 		PNET = map.get(TimeFrameRequirements.DELIVER_NOT_LATER_THAN);
-	}
-
-	public String getOrganizationName() {
-		return organizationName;
-	}
-
-	public String getShipmentID() {
-		return shipmentID;
-	}
-
-	public ShipmentStatus getStatus() {
-		return status;
-	}
-
-	public String getScac() {
-		return scac;
-	}
-
-	public String getOriginCity() {
-		return originCity;
-	}
-
-	public String getDestinationCity() {
-		return destinationCity;
-	}
-
-	public LocalDateTime getPNET() {
-		return PNET;
-	}
-
-	public LocalDateTime getPNLT() {
-		return PNLT;
-	}
-
-	public LocalDateTime getDNET() {
-		return DNET;
-	}
-
-	public LocalDateTime getDNLT() {
-		return DNLT;
 	}
 
 	@Override
