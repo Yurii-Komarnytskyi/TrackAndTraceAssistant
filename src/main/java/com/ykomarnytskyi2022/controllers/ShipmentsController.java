@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.ykomarnytskyi2022.commands.ShipmentImplCommand;
 import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.repositories.TrackableRepository;
 
@@ -24,9 +25,9 @@ public class ShipmentsController {
 
 	@GetMapping("/shipments")
 	public String getShipmentsList(Model model) {
-		List<Shipment> shipments = StreamSupport.stream(trackableRepository.findAll().spliterator(), false)
-				.map(trackable -> (Shipment) trackable).toList();
+		List<ShipmentImplCommand> shipments = StreamSupport.stream(trackableRepository.findAll().spliterator(), false)
+				.map(trackable -> new ShipmentImplCommand((Shipment) trackable)).toList();
 		model.addAttribute(SHIPMENTS, shipments);
-		return SHIPMENTS.concat("/shipmentsList");
+		return SHIPMENTS.concat("/shipmentList");
 	}
 }
