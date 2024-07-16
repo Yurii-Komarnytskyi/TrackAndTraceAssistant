@@ -106,6 +106,11 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	}
 
 	@Override
+	public String getOrganizationName() {
+		return organizationName;
+	}
+	
+	@Override
 	public int hashCode() {
 		return Objects.hash(originCity, destinationCity, originState, destinationState, PNET, DNLT);
 	}
@@ -120,5 +125,6 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	public String toString() {
 		return "ShipmentImpl [shipmentNumber=" + shipmentNumber + ", shipmentID=" + shipmentID + "]";
 	}
+
 
 }

@@ -45,4 +45,6 @@ public abstract class Trackable extends BaseShipmentProperties {
 	public abstract int getNextStopNLT();
 
 	public abstract ShipmentStatus getStatus();
+	
+	public abstract String getOrganizationName();
 }
