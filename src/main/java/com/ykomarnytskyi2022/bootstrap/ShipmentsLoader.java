@@ -5,19 +5,20 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.ykomarnytskyi2022.freight.Trackable;
-import com.ykomarnytskyi2022.repositories.ShipmentRepository;
+import com.ykomarnytskyi2022.repositories.TrackableRepository;
 import com.ykomarnytskyi2022.services.excel.ExcelOperations;
 
 @Component
 public class ShipmentsLoader implements CommandLineRunner {
-	
+
 	final ExcelOperations excelOperations;
-	final ShipmentRepository shipmentRepository;
-	
+
+	final TrackableRepository trackableRepository;
+
 	@Autowired
-	public ShipmentsLoader(ExcelOperations excelOperations, ShipmentRepository shipmentRepository) {
+	public ShipmentsLoader(ExcelOperations excelOperations, TrackableRepository trackableRepository) {
 		this.excelOperations = excelOperations;
-		this.shipmentRepository = shipmentRepository;
+		this.trackableRepository = trackableRepository;
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class ShipmentsLoader implements CommandLineRunner {
 		excelOperations.write();
 		excelOperations.expose().stream().forEach(customerList -> {
 			customerList.stream().forEach(shipment -> {
-				shipmentRepository.save((Trackable)shipment);
+				trackableRepository.save((Trackable) shipment);
 			});
 		});
 	}

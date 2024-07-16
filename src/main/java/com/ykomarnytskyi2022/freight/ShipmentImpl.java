@@ -12,19 +12,8 @@ import jakarta.persistence.Entity;
 @Entity
 public class ShipmentImpl extends Trackable implements Shipment {
 
-	private String organizationName;
-	private String shipmentNumber;
-	private String shipmentID;
-	private ShipmentStatus status;
+	private String shipmentID; 
 	private String scac;
-	private String originCity;
-	private String destinationCity;
-	private String originState;
-	private String destinationState;
-	private LocalDateTime PNET;
-	private LocalDateTime PNLT;
-	private LocalDateTime DNET;
-	private LocalDateTime DNLT;
 
 	public ShipmentImpl(Map<String, String> fields) {
 		try {
@@ -117,6 +106,11 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	}
 
 	@Override
+	public String getOrganizationName() {
+		return organizationName;
+	}
+	
+	@Override
 	public int hashCode() {
 		return Objects.hash(originCity, destinationCity, originState, destinationState, PNET, DNLT);
 	}
@@ -131,5 +125,6 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	public String toString() {
 		return "ShipmentImpl [shipmentNumber=" + shipmentNumber + ", shipmentID=" + shipmentID + "]";
 	}
+
 
 }

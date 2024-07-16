@@ -5,12 +5,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.ykomarnytskyi2022.domain.BaseEntity;
+import com.ykomarnytskyi2022.domain.BaseShipmentProperties;
 
 import jakarta.persistence.Entity;
 
 @Entity
-public abstract class Trackable extends BaseEntity {
+public abstract class Trackable extends BaseShipmentProperties {
 
 	static String shipperETA = "Could you advise on an ETA to the shipper in ";
 	static String gotLoaded = "Could you advise if this load has been picked up in ";
@@ -45,4 +45,6 @@ public abstract class Trackable extends BaseEntity {
 	public abstract int getNextStopNLT();
 
 	public abstract ShipmentStatus getStatus();
+	
+	public abstract String getOrganizationName();
 }
