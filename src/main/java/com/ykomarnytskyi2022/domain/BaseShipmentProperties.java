@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class BaseShipmentProperties extends BaseEntity {
 	
 	protected String organizationName; 
