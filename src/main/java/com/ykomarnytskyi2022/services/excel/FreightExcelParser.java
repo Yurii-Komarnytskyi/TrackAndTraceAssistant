@@ -1,4 +1,4 @@
-package com.ykomarnytskyi2022.excel_services;
+package com.ykomarnytskyi2022.services.excel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +31,7 @@ public class FreightExcelParser implements ExcelParser {
 	private Sheet sheet;
 	private Row headerRow;
 	private ShipmentFactory shipmentFactory;
-
+	
 	public FreightExcelParser(Path path, String sheetName, ShipmentFactory shipmentFactory) {
 		this.path = path;
 		this.sheetName = sheetName;
@@ -53,6 +53,7 @@ public class FreightExcelParser implements ExcelParser {
 			Shipment parsedRow = parseRowHorizontally(n, this.countFilledColumns());
 			parsedFreightData.add(parsedRow);
 		});
+		
 		return parsedFreightData;
 	}
 

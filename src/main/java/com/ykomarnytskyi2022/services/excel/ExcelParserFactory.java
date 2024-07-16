@@ -1,4 +1,4 @@
-package com.ykomarnytskyi2022.excel_services;
+package com.ykomarnytskyi2022.services.excel;
 
 import java.nio.file.Path;
 

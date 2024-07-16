@@ -1,50 +1,48 @@
-package com.ykomarnytskyi2022.excel_services;
+package com.ykomarnytskyi2022.services.excel;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.ykomarnytskyi2022.freight.Shipment;
 
-@Service
-@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ParsingAndWritingDelegator {
+public class ExcelOperationsImpl implements ExcelOperations {
 
 	private ExcelWriter excelWriter;
 	private List<Path> pathsToSourceExcelFiles = new ArrayList<>();
 	private List<List<Shipment>> shipmentsFromDifferentCustomers = new ArrayList<>();
 	private ExcelParserFactory excelParserFactory;
 
-	@Autowired
-	public ParsingAndWritingDelegator(ExcelWriter fileBeingWritten, ExcelParserFactory excelParserFactory) {
-		this.excelWriter = fileBeingWritten;
+	public ExcelOperationsImpl(ExcelWriter excelWriter, ExcelParserFactory excelParserFactory,
+			LocalMachinePaths localMachinePaths) {
+		this.excelWriter = excelWriter;
 		this.excelParserFactory = excelParserFactory;
+		pathsToSourceExcelFiles.addAll(localMachinePaths.getPathsToSourceExcelFiles().stream().distinct().toList());
 	}
 	
-	public ParsingAndWritingDelegator() {
+	public ExcelOperationsImpl() {
 
 	}
-
-	public void readAndWrite() {
+	
+	public boolean offerPathToSourceExcelFile(Path path) {
+		return pathsToSourceExcelFiles.add(path);
+	}
+	
+	@Override
+	public void write() {
 		if (gotAvailablePathsToSourceExcelFiles()) {
 			initShipmentsFromDifferentCustomers();
 			excelWriter.writePickupsAndDeliveriesOnSeparateSheets(shipmentsFromDifferentCustomers);
 		} else {
 			System.err.println("No paths to source excel files were provided");
-		}
+		}		
 	}
 
-	
 	private void initShipmentsFromDifferentCustomers() {
 		if (gotAvailablePathsToSourceExcelFiles()) {
 			pathsToSourceExcelFiles.stream().forEach(path -> {
 				List<Shipment> shipmentImpls = excelParserFactory
-						.create(path, LocalMachinePaths.SEARCH_RESULTS)
+						.create(path, "Search Results")
 						.parseFreightDataFromFile();
 				shipmentsFromDifferentCustomers.add(shipmentImpls);
 			});
@@ -55,8 +53,8 @@ public class ParsingAndWritingDelegator {
 		return this.pathsToSourceExcelFiles.size() > 0;
 	}
 
-	public boolean offerPathToSourceExcelFile(Path path) {
-		return pathsToSourceExcelFiles.add(path);
+	@Override
+	public List<List<Shipment>> expose() {
+		return shipmentsFromDifferentCustomers;
 	}
-	
 }
