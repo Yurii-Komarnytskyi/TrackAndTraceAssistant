@@ -18,4 +18,13 @@ public class BaseShipmentProperties extends BaseEntity {
 	protected LocalDateTime DNET;
 	protected LocalDateTime DNLT;
 	
+	@Override
+	public String toString() {
+		return "BaseShipmentProperties [organizationName=" + organizationName + ", shipmentNumber=" + shipmentNumber
+				+ ", status=" + status + ", originCity=" + originCity + ", destinationCity=" + destinationCity
+				+ ", originState=" + originState + ", destinationState=" + destinationState + "]";
+	}
+	
+	
+	
 }

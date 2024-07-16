@@ -3,9 +3,10 @@ package com.ykomarnytskyi2022.commands;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import com.ykomarnytskyi2022.freight.ShipmentImpl;
+import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 import com.ykomarnytskyi2022.freight.TimeFrameRequirements;
+import com.ykomarnytskyi2022.freight.Trackable;
 
 public class ShipmentImplCommand {
 
@@ -20,11 +21,11 @@ public class ShipmentImplCommand {
 	public LocalDateTime DNET;
 	public LocalDateTime DNLT;
 	
-	public ShipmentImplCommand(ShipmentImpl shipment) {
-		organizationName = shipment.getOrganizationName();
+	public ShipmentImplCommand(Shipment shipment) {
+		organizationName = ((Trackable) shipment).getOrganizationName();
 		shipmentID = shipment.provideFieldsForExcelCells().get(0);
-		status = shipment.getStatus();
-		scac = shipment.getScacCode();
+		status = ((Trackable) shipment).getStatus();
+		scac = ((Trackable) shipment).getScacCode();
 		originCity = shipment.getOriginPlaceAndState();
 		destinationCity = shipment.getDestinationPlaceAndState();
 		Map<TimeFrameRequirements, LocalDateTime> map = shipment.getTimeFrameRequirements();
@@ -73,5 +74,14 @@ public class ShipmentImplCommand {
 	public LocalDateTime getDNLT() {
 		return DNLT;
 	}
+
+	@Override
+	public String toString() {
+		return "ShipmentImplCommand [organizationName=" + organizationName + ", shipmentID=" + shipmentID + ", status="
+				+ status + ", scac=" + scac + ", originCity=" + originCity + ", destinationCity=" + destinationCity
+				+ "]";
+	}
+	
+	
 
 }
