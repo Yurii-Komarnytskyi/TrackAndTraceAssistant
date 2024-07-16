@@ -38,6 +38,13 @@ public abstract class Trackable extends BaseShipmentProperties {
 				.collect(Collectors.joining(" "));
 	}
 	
+	@Override
+	public String toString() {
+		return "Trackable [organizationName=" + organizationName + ", shipmentNumber=" + shipmentNumber + ", status="
+				+ status + ", originCity=" + originCity + ", destinationCity=" + destinationCity + ", originState="
+				+ originState + ", destinationState=" + destinationState + ", id=" + id + "]";
+	}
+
 	public abstract String getSatusUpdate();
 	
 	public abstract String getScacCode();

@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class BaseShipmentProperties extends BaseEntity {
 	
 	protected String organizationName; 
@@ -17,5 +20,14 @@ public class BaseShipmentProperties extends BaseEntity {
 	protected LocalDateTime PNLT;
 	protected LocalDateTime DNET;
 	protected LocalDateTime DNLT;
+	
+	@Override
+	public String toString() {
+		return "BaseShipmentProperties [organizationName=" + organizationName + ", shipmentNumber=" + shipmentNumber
+				+ ", status=" + status + ", originCity=" + originCity + ", destinationCity=" + destinationCity
+				+ ", originState=" + originState + ", destinationState=" + destinationState + "]";
+	}
+	
+	
 	
 }

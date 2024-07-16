@@ -123,8 +123,10 @@ public class ShipmentImpl extends Trackable implements Shipment {
 
 	@Override
 	public String toString() {
-		return "ShipmentImpl [shipmentNumber=" + shipmentNumber + ", shipmentID=" + shipmentID + "]";
+		return "ShipmentImpl [shipmentID=" + shipmentID + ", scac=" + scac + ", organizationName=" + organizationName
+				+ ", shipmentNumber=" + shipmentNumber + ", status=" + status + ", originCity=" + originCity
+				+ ", destinationCity=" + destinationCity + ", originState=" + originState + ", destinationState="
+				+ destinationState + ", id=" + id + "]";
 	}
-
 
 }
