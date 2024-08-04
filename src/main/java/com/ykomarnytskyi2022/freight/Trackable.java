@@ -8,8 +8,10 @@ import java.util.stream.Stream;
 import com.ykomarnytskyi2022.domain.BaseShipmentProperties;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "shipments")
 public abstract class Trackable extends BaseShipmentProperties {
 
 	static String shipperETA = "Could you advise on an ETA to the shipper in ";
