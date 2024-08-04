@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 import com.ykomarnytskyi2022.freight.ShipmentStatus;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
+@MappedSuperclass
 public class BaseShipmentProperties extends BaseEntity {
 	
 	protected String organizationName; 
@@ -27,7 +27,5 @@ public class BaseShipmentProperties extends BaseEntity {
 				+ ", status=" + status + ", originCity=" + originCity + ", destinationCity=" + destinationCity
 				+ ", originState=" + originState + ", destinationState=" + destinationState + "]";
 	}
-	
-	
-	
+
 }

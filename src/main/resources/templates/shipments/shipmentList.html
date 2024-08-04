@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Welcome Page</title>
+    <link th:href="@{/styles/shipmentListStyles.css}" rel="stylesheet" />
 </head>
 
 <body>  
 
-    <h3>Shipment List</h3>
-    <ul th:each="shipment : ${shipments}">
-        <li th:text="${shipment.shipmentID} + ' ' + ${shipment.scac} + ' ' + ${shipment.originCity} + ' to ' + ${shipment.destinationCity} "></li>
-    </ul>
+    <div class="header">
+        <div>Shipment Id</div>
+        <div>SCAC code</div>
+        <div>From</div>
+        <div>To</div>
+    </div>
+
+    <div class="shpm" th:each="shipment : ${shipments}">
+        <div th:text="${shipment.shipmentID}"></div>
+        <div th:text="${shipment.scac}"></div>
+        <div th:text="${shipment.originCity}"></div>
+        <div th:text="${shipment.destinationCity}"></div>
+
+        <button>Update</button>
+        <button>Delete</button>
+    </div>
 
 </body>
 </html>
