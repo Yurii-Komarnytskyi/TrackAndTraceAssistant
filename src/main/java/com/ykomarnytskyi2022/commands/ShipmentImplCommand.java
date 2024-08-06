@@ -11,6 +11,7 @@ import com.ykomarnytskyi2022.freight.Trackable;
 
 public class ShipmentImplCommand {
 
+	public Long id;
 	public String organizationName; 
 	public String shipmentID; 
 	public ShipmentStatus status; 
@@ -23,13 +24,16 @@ public class ShipmentImplCommand {
 	public LocalDateTime DNLT;
 	
 	public ShipmentImplCommand(Shipment shipment) {
-		organizationName = ((Trackable) shipment).getOrganizationName();
+		Trackable trackable = (Trackable) shipment;
+		Map<TimeFrameRequirements, LocalDateTime> map = shipment.getTimeFrameRequirements();
+		
+		id = trackable.getIdForCommandObj();
+		organizationName = trackable.getOrganizationName();
 		shipmentID = shipment.provideFieldsForExcelCells().get(0);
-		status = ((Trackable) shipment).getStatus();
-		scac = ((Trackable) shipment).getScacCode();
+		status = trackable.getStatus();
+		scac = trackable.getScacCode();
 		originCity = shipment.getOriginPlaceAndState();
 		destinationCity = shipment.getDestinationPlaceAndState();
-		Map<TimeFrameRequirements, LocalDateTime> map = shipment.getTimeFrameRequirements();
 		PNET = map.get(TimeFrameRequirements.PICKUP_NOT_EARLIER_THAN);
 		PNLT = map.get(TimeFrameRequirements.PICKUP_NOT_LATER_THAN);
 		DNET = map.get(TimeFrameRequirements.DELIVER_NOT_EARLIER_THAN);
@@ -42,7 +46,5 @@ public class ShipmentImplCommand {
 				+ status + ", scac=" + scac + ", originCity=" + originCity + ", destinationCity=" + destinationCity
 				+ "]";
 	}
-	
-	
 
 }

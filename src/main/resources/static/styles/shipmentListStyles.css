@@ -1,0 +1,29 @@
+.header{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    width: 50%;
+    margin-top: 2%;
+    border-top: 1px solid #55557f;
+    border-bottom: 1px solid #55557f;
+    border-radius: 5px;
+    padding: 5px;
+    color: #8a7970;
+    font-size: 1.3em;
+    font-weight: 550;
+    background-color: #f5f5f5;
+    user-select: none;
+}
+
+.shpm{
+	display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    width: 50%;
+    border-top: 1px solid #55557f;
+    border-bottom: 1px solid #55557f;
+    border-radius: 5px;
+    padding: 5px;
+    color: rgb(0, 0, 0);
+    font-size: 1.3em;
+    font-weight: 550;
+    background-color: #f5f5f5;
+}
