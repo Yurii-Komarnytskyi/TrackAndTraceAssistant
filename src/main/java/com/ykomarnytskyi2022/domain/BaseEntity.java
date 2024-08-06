@@ -7,16 +7,13 @@ import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class BaseEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
 
-	protected Long getId() {
+	public Long getIdForCommandObj() {
 		return id;
 	}
-
-	protected void setId(Long id) {
-		this.id = id;
-	}
+	
 }

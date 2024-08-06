@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ykomarnytskyi2022.commands.ShipmentImplCommand;
 import com.ykomarnytskyi2022.freight.Shipment;
@@ -16,7 +17,9 @@ import com.ykomarnytskyi2022.repositories.TrackableRepository;
 public class ShipmentsController {
 
 	private final TrackableRepository trackableRepository;
+	
 	private final String SHIPMENTS = "shipments";
+	private final String SHIPMENTS_SHIPMENT_LIST = "shipments/shipmentList";
 
 	@Autowired
 	public ShipmentsController(TrackableRepository trackableRepository) {
@@ -28,6 +31,12 @@ public class ShipmentsController {
 		List<ShipmentImplCommand> shipments = StreamSupport.stream(trackableRepository.findAll().spliterator(), false)
 				.map(trackable -> new ShipmentImplCommand((Shipment) trackable)).toList();
 		model.addAttribute(SHIPMENTS, shipments);
-		return SHIPMENTS.concat("/shipmentList");
+		return SHIPMENTS_SHIPMENT_LIST;
+	}
+	
+	@GetMapping("shipments/{id}/delete")
+	public String deleteShipment(@PathVariable Long id) {
+		trackableRepository.deleteById(id);
+		return "redirect:/".concat(SHIPMENTS);
 	}
 }

@@ -22,7 +22,7 @@
         <div th:text="${shipment.destinationCity}"></div>
 
         <button>Update</button>
-        <button>Delete</button>
+        <button> <a href="#" th:href="@{'/shipments/' + ${shipment.id} + '/delete'}">Delete</a> </button>
     </div>
 
 </body>
