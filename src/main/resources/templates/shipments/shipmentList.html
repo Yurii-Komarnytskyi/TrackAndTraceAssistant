@@ -21,7 +21,7 @@
         <div th:text="${shipment.originCity}"></div>
         <div th:text="${shipment.destinationCity}"></div>
 
-        <button>Update</button>
+        <button> <a href="#" th:href="@{'/shipments/' + ${shipment.id} + '/edit'}">Edit</a> </button>
         <button> <a href="#" th:href="@{'/shipments/' + ${shipment.id} + '/delete'}">Delete</a> </button>
     </div>
 

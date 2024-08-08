@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Welcome Page</title>
+    <link th:href="@{/styles/shipmentEditFormStyles.css}" rel="stylesheet" />
+</head>
+
+<body>  
+
+    <form  th:object="${shipment}" th:action="@{'/shipments/' + ${shipment.id} + '/save'} " method="post">
+        <div class="shpm">
+            <div>
+                <label>Shipment Id:</label>
+                <input type="text" th:field="*{shipmentID}"/>
+            </div>
+    
+            <div>
+                <label>SCAC code:</label>
+                <input type="text" th:field="*{scac}"/> 
+            </div>
+
+            <div>
+                <label>Origin city:</label>
+                <input type="text" th:field="*{originCity}"/>
+            </div>
+    
+            <div>
+                <label>Destination city:</label>
+                <input type="text" th:field="*{destinationCity}"/>
+            </div>
+
+            <button type="submit">Submit</button>
+            
+        </div>
+
+        
+    </form>
+
+    
+</body>
+</html>
