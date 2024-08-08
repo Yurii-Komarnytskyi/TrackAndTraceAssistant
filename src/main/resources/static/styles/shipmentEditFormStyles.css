@@ -1,0 +1,14 @@
+.shpm {
+	display: grid;
+	grid-template-columns: auto auto auto auto auto;
+	width: 50%;
+	margin: auto;
+	border-top: 1px solid #55557f;
+	border-bottom: 1px solid #55557f;
+	border-radius: 5px;
+	padding: 5px;
+	color: rgb(0, 0, 0);
+	font-size: 1.3em;
+	font-weight: 550;	
+	background-color: #f5f5f5;
+}
