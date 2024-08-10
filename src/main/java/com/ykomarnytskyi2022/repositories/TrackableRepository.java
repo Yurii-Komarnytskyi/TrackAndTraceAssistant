@@ -2,13 +2,13 @@ package com.ykomarnytskyi2022.repositories;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.ListCrudRepository;
 
 import com.ykomarnytskyi2022.freight.Trackable;
 
 import jakarta.transaction.Transactional;
 
-public interface TrackableRepository extends CrudRepository<Trackable, Long> {
+public interface TrackableRepository extends ListCrudRepository<Trackable, Long> {
 
 	@Transactional
 	@Modifying
