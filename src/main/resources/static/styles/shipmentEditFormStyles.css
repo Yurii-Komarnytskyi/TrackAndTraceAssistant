@@ -1,7 +1,7 @@
 .shpm {
 	display: grid;
-	grid-template-columns: auto auto auto auto auto;
-	width: 50%;
+	grid-template-columns: auto auto auto auto auto auto auto;
+	width: 70%;
 	margin: auto;
 	border-top: 1px solid #55557f;
 	border-bottom: 1px solid #55557f;

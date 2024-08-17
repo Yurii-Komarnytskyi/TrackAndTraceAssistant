@@ -14,4 +14,7 @@ public interface Shipment {
 	
 	public Map<TimeFrameRequirements, LocalDateTime> getTimeFrameRequirements();
 
+	static String concatCityAndState(String city, String state) {
+		return city.trim().concat(", ").concat(state.trim().toUpperCase());
+	}
 }

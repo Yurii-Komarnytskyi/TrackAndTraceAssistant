@@ -26,10 +26,20 @@ public interface TrackableBaseRepository extends CrudRepository<Trackable, Long>
 	@Modifying
 	@Query("update Trackable t set t.destinationCity = ?1 where t.id = ?2")
 	void setDestinationCityById(String destinationCity, Long id);
+	
+	@Transactional
+	@Modifying
+	@Query("update Trackable t set t.destinationState = ?1 where t.id = ?2")
+	void setDestinationStateById(String destinationState, Long id);
 
 	@Transactional
 	@Modifying
 	@Query("update Trackable t set t.originCity = ?1 where t.id = ?2")
 	void setOriginCityById(String originCity, Long id);
+	
+	@Transactional
+	@Modifying
+	@Query("update Trackable t set t.originState = ?1 where t.id = ?2")
+	void setOriginStateById(String originState, Long id);
 	
 }
