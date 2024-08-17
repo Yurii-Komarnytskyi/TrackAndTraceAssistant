@@ -1,7 +1,6 @@
 package com.ykomarnytskyi2022.controllers;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +31,7 @@ public class ShipmentsController {
 
 	@GetMapping("/shipments")
 	public String getShipmentsList(Model model) {
-		List<ShipmentImplCommand> shipments = StreamSupport.stream(trackableRepository.findAll().spliterator(), false)
+		List<ShipmentImplCommand> shipments = trackableRepository.findAll().stream()
 				.map(trackable -> new ShipmentImplCommand((Shipment) trackable)).toList();
 		model.addAttribute(SHIPMENTS, shipments);
 		return SHIPMENTS_SHIPMENT_LIST;
@@ -53,11 +52,14 @@ public class ShipmentsController {
 	}
 
 	@PostMapping("shipments/{id}/save")
-	public String saveShipment(@PathVariable Long id, @ModelAttribute ShipmentImplCommand shipmentImplCommand) {
-		trackableRepository.setDestinationCityById(shipmentImplCommand.getDestinationCity(), shipmentImplCommand.getId());
-		trackableRepository.setOriginCityById(shipmentImplCommand.getOriginCity(), shipmentImplCommand.getId());
-		trackableRepository.setScacById(shipmentImplCommand.getScac(), shipmentImplCommand.getId());
-		trackableRepository.setShipmentIDById(shipmentImplCommand.getShipmentID(), shipmentImplCommand.getId());
+	public String saveShipment(@PathVariable Long id, @ModelAttribute ShipmentImplCommand command) {
+		Long commandId = command.getId();
+		trackableRepository.setOriginCityById(command.getOriginCity(), commandId);
+		trackableRepository.setOriginStateById(command.getOriginState(), commandId);
+		trackableRepository.setDestinationCityById(command.getDestinationCity(), commandId);
+		trackableRepository.setDestinationStateById(command.getDestinationState(), commandId);
+		trackableRepository.setScacById(command.getScac(),commandId);
+		trackableRepository.setShipmentIDById(command.getShipmentID(), commandId);
 		return "redirect:/".concat(SHIPMENTS);
 	}
 

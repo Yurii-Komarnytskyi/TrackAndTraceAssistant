@@ -12,7 +12,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class ShipmentImpl extends Trackable implements Shipment {
 
-	private String shipmentID; 
+	private String shipmentID;
 	private String scac;
 
 	public ShipmentImpl(Map<String, String> fields) {
@@ -46,6 +46,22 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	}
 
 	public ShipmentImpl() {
+	}
+
+	public String getOriginCity() {
+		return originCity;
+	}
+
+	public String getDestinationCity() {
+		return destinationCity;
+	}
+
+	public String getOriginState() {
+		return originState;
+	}
+
+	public String getDestinationState() {
+		return destinationState;
 	}
 
 	@Override
@@ -90,12 +106,12 @@ public class ShipmentImpl extends Trackable implements Shipment {
 
 	@Override
 	public String getOriginPlaceAndState() {
-		return originCity + ", " + originState;
+		return Shipment.concatCityAndState(originCity, originState);
 	}
 
 	@Override
 	public String getDestinationPlaceAndState() {
-		return destinationCity + ", " + destinationState;
+		return Shipment.concatCityAndState(destinationCity, destinationState);
 	}
 
 	@Override
@@ -109,7 +125,7 @@ public class ShipmentImpl extends Trackable implements Shipment {
 	public String getOrganizationName() {
 		return organizationName;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(originCity, destinationCity, originState, destinationState, PNET, DNLT);
