@@ -11,6 +11,7 @@
     <div class="header">
         <div>Shipment Id</div>
         <div>SCAC code</div>
+        <div>Status</div>
         <div>From</div>
         <div>To</div>
     </div>
@@ -18,6 +19,7 @@
     <div class="shpm" th:each="shipment : ${shipments}">
         <div th:text="${shipment.shipmentID}"></div>
         <div th:text="${shipment.scac}"></div>
+        <div th:text="${shipment.status}"></div>
         <div th:text="${shipment.originCity + ' ' + shipment.originState}"></div>
         <div th:text="${shipment.destinationCity + ' ' + shipment.destinationState}"></div>
 

@@ -1,7 +1,7 @@
 div {
 	display: grid;
-	grid-template-columns: auto auto auto auto auto auto;
-	width: 50%;
+	grid-template-columns: auto auto auto auto auto auto auto;
+	width: 70%;
 	margin: auto;
 }
 
