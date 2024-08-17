@@ -18,8 +18,8 @@
     <div class="shpm" th:each="shipment : ${shipments}">
         <div th:text="${shipment.shipmentID}"></div>
         <div th:text="${shipment.scac}"></div>
-        <div th:text="${shipment.originCity}"></div>
-        <div th:text="${shipment.destinationCity}"></div>
+        <div th:text="${shipment.originCity + ' ' + shipment.originState}"></div>
+        <div th:text="${shipment.destinationCity + ' ' + shipment.destinationState}"></div>
 
         <button> <a href="#" th:href="@{'/shipments/' + ${shipment.id} + '/edit'}">Edit</a> </button>
         <button> <a href="#" th:href="@{'/shipments/' + ${shipment.id} + '/delete'}">Delete</a> </button>
