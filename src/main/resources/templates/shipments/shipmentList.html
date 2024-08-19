@@ -14,6 +14,9 @@
         <div>Status</div>
         <div>From</div>
         <div>To</div>
+        <!-- <button><a href="#" th:object="${shipment}" th:href="@{'/shipments/' + ${shipment} + '/addNew'}">Add new</a></button> -->
+
+        <button><a href="#" th:href="@{'/shipments/addNew'}">Add new</a></button>
     </div>
 
     <div class="shpm" th:each="shipment : ${shipments}">

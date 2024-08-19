@@ -17,9 +17,9 @@ public enum ShipmentStatus {
 	
 	
 	public static ShipmentStatus fromString(String str) {
-		for (ShipmentStatus ss : ShipmentStatus.values()) {
-			if (ss.status.equals(str.trim().toLowerCase())) {
-				return ss;
+		for (ShipmentStatus shipmentStatus : ShipmentStatus.values()) {
+			if (shipmentStatus.status.equals(str.trim().toLowerCase())) {
+				return shipmentStatus;
 			}
 		}
 		return ShipmentStatus.PENDING_PU;

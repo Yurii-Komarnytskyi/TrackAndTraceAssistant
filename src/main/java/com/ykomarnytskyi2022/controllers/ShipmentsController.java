@@ -1,6 +1,7 @@
 package com.ykomarnytskyi2022.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.ykomarnytskyi2022.commands.ShipmentImplCommand;
 import com.ykomarnytskyi2022.freight.Shipment;
+import com.ykomarnytskyi2022.freight.ShipmentImpl;
 import com.ykomarnytskyi2022.freight.Trackable;
 import com.ykomarnytskyi2022.repositories.TrackableRepository;
 
@@ -19,10 +21,11 @@ import com.ykomarnytskyi2022.repositories.TrackableRepository;
 public class ShipmentsController {
 
 	private final TrackableRepository trackableRepository;
-
 	private final String SHIPMENTS = "shipments";
-	private final String SHIPMENTS_SHIPMENT_LIST = "shipments/shipmentList";
-	private final String SHIPMENTS_SHIPMENT_EDIT_FORM = "shipments/shipmentEditForm";
+	private final String SHIPMENTS_SHIPMENT_LIST = SHIPMENTS.concat("/shipmentList");
+	private final String SHIPMENTS_SHIPMENT_EDIT_FORM = SHIPMENTS.concat("/shipmentEditForm");
+	private final String SHIPMENTS_NEW_SHIPMENT = SHIPMENTS.concat("/addNewShipment");
+	private final String REDIRECT_TO_SHIPMENTS = "redirect:/shipments";
 
 	@Autowired
 	public ShipmentsController(TrackableRepository trackableRepository) {
@@ -45,22 +48,41 @@ public class ShipmentsController {
 
 	@GetMapping("shipments/{id}/edit")
 	public String editShipment(@PathVariable Long id, Model model) {
-		Trackable t = trackableRepository.findById(id).get();
-		ShipmentImplCommand sic = new ShipmentImplCommand((Shipment) t);
-		model.addAttribute("shipment", sic);
+		Trackable trackable = trackableRepository.findById(id).get();
+		ShipmentImplCommand command = new ShipmentImplCommand((Shipment) trackable);
+		
+		model.addAttribute("shipment", command);
 		return SHIPMENTS_SHIPMENT_EDIT_FORM;
 	}
 
 	@PostMapping("shipments/{id}/save")
 	public String saveShipment(@PathVariable Long id, @ModelAttribute ShipmentImplCommand command) {
 		Long commandId = command.getId();
+		
 		trackableRepository.setOriginCityById(command.getOriginCity(), commandId);
 		trackableRepository.setOriginStateById(command.getOriginState(), commandId);
 		trackableRepository.setDestinationCityById(command.getDestinationCity(), commandId);
 		trackableRepository.setDestinationStateById(command.getDestinationState(), commandId);
 		trackableRepository.setScacById(command.getScac(),commandId);
 		trackableRepository.setShipmentIDById(command.getShipmentID(), commandId);
-		return "redirect:/".concat(SHIPMENTS);
+		return REDIRECT_TO_SHIPMENTS;
+	}
+	
+	@GetMapping("shipments/addNew")
+	public String newShipmentForm(Model model) {
+		ShipmentImplCommand command = new ShipmentImplCommand();
+		
+		model.addAttribute("shipment", command);
+		return SHIPMENTS_NEW_SHIPMENT;
+	}
+	
+	@PostMapping("shipments/saveNew")
+	public String addNewShipment(@ModelAttribute ShipmentImplCommand command) {
+		Map<String, String> fields = command.getFields();
+		ShipmentImpl shipment = new ShipmentImpl(fields);
+		
+		trackableRepository.save(shipment);
+		return REDIRECT_TO_SHIPMENTS;
 	}
 
 }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Welcome Page</title>
+    <link th:href="@{/styles/shipmentEditFormStyles.css}" rel="stylesheet" />
+</head>
+
+<body>  
+
+    <!-- 
+
+    <div>
+        <label>  :</label>
+        <input type="text" th:field="*{   }"/>
+    </div> 
+    
+    -->
+
+    <form  th:object="${shipment}" th:action="@{'/shipments/saveNew'} " method="post">
+        <div class="shpm">
+
+            <div>
+                <label>Organization Name:</label>
+                <input type="text" th:field="*{organizationName}"/>
+            </div>
+
+           <div>
+                <label>Shipment Number :</label>
+                <input type="text" th:field="*{shipmentNumber}"/>
+            </div>            
+
+            <div>
+                <label>Shipment Id:</label>
+                <input type="text" th:field="*{shipmentID}"/>
+            </div>
+    
+            <div>
+                <label>Status :</label>
+                <input type="text" th:field="*{status}"/>
+            </div> 
+
+            <div>
+                <label>SCAC code:</label>
+                <input type="text" th:field="*{scac}"/> 
+            </div>
+
+            <div>
+                <label>Origin city:</label>
+                <input type="text" th:field="*{originCity}"/>
+            </div>
+
+            <div>
+                <label>Origin state:</label>
+                <input type="text" th:field="*{originState}"/>
+            </div>
+    
+            <div>
+                <label>Destination city:</label>
+                <input type="text" th:field="*{destinationCity}"/>
+            </div>
+
+            <div>
+                <label>Destination state:</label>
+                <input type="text" th:field="*{destinationState}"/>
+            </div>
+
+            <div>
+                <label>PNET :</label>
+                <input type="text" th:field="*{PNET}"/>
+            </div> 
+
+            <div>
+                <label>PNLT :</label>
+                <input type="text" th:field="*{PNLT}"/>
+            </div> 
+
+            <div>
+                <label>DNET :</label>
+                <input type="text" th:field="*{DNET}"/>
+            </div> 
+
+            <div>
+                <label>DNLT :</label>
+                <input type="text" th:field="*{DNLT}"/>
+            </div> 
+
+            <button type="submit">Submit</button>
+            
+        </div>
+    </form>
+</body>
+</html>
