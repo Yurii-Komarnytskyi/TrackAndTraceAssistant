@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.ykomarnytskyi2022.commands.ShipmentImplCommand;
 import com.ykomarnytskyi2022.freight.Shipment;
 import com.ykomarnytskyi2022.freight.ShipmentImpl;
+import com.ykomarnytskyi2022.freight.ShipmentStatus;
 import com.ykomarnytskyi2022.freight.Trackable;
 import com.ykomarnytskyi2022.repositories.TrackableRepository;
 
@@ -26,6 +27,7 @@ public class ShipmentsController {
 	private final String SHIPMENTS_SHIPMENT_EDIT_FORM = SHIPMENTS.concat("/shipmentEditForm");
 	private final String SHIPMENTS_NEW_SHIPMENT = SHIPMENTS.concat("/addNewShipment");
 	private final String REDIRECT_TO_SHIPMENTS = "redirect:/shipments";
+	private final ShipmentStatus[] statuses = ShipmentStatus.values();
 
 	@Autowired
 	public ShipmentsController(TrackableRepository trackableRepository) {
@@ -73,6 +75,7 @@ public class ShipmentsController {
 		ShipmentImplCommand command = new ShipmentImplCommand();
 		
 		model.addAttribute("shipment", command);
+		model.addAttribute("statuses", statuses);
 		return SHIPMENTS_NEW_SHIPMENT;
 	}
 	

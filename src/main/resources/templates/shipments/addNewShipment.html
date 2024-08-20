@@ -8,15 +8,6 @@
 
 <body>  
 
-    <!-- 
-
-    <div>
-        <label>  :</label>
-        <input type="text" th:field="*{   }"/>
-    </div> 
-    
-    -->
-
     <form  th:object="${shipment}" th:action="@{'/shipments/saveNew'} " method="post">
         <div class="shpm">
 
@@ -36,8 +27,10 @@
             </div>
     
             <div>
-                <label>Status :</label>
-                <input type="text" th:field="*{status}"/>
+                <label>Status:</label>
+                <select th:field="*{status}">
+                    <option th:each="stat : ${statuses}" th:value="${{stat}}" th:text="${stat}">
+                </select>
             </div> 
 
             <div>
@@ -64,26 +57,6 @@
                 <label>Destination state:</label>
                 <input type="text" th:field="*{destinationState}"/>
             </div>
-
-            <div>
-                <label>PNET :</label>
-                <input type="text" th:field="*{PNET}"/>
-            </div> 
-
-            <div>
-                <label>PNLT :</label>
-                <input type="text" th:field="*{PNLT}"/>
-            </div> 
-
-            <div>
-                <label>DNET :</label>
-                <input type="text" th:field="*{DNET}"/>
-            </div> 
-
-            <div>
-                <label>DNLT :</label>
-                <input type="text" th:field="*{DNLT}"/>
-            </div> 
 
             <button type="submit">Submit</button>
             
